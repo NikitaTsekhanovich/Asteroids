@@ -1,9 +1,10 @@
 {
-    "name": "GameModule",
+    "name": "ApplicationModule",
     "rootNamespace": "",
     "references": [
         "GUID:0757b70b47b711d4086aa5c25611f7a6",
-        "GUID:7229f4411a50a144794c9b0f22c1bcdc"
+        "GUID:7229f4411a50a144794c9b0f22c1bcdc",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
