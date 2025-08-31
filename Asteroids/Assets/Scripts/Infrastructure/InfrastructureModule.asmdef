@@ -1,0 +1,16 @@
+{
+    "name": "InfrastructureModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0757b70b47b711d4086aa5c25611f7a6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
