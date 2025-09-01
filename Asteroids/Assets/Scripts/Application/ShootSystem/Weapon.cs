@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Application.GameEntities;
 using UnityEngine;
 
 namespace Application.ShootSystem
@@ -7,15 +8,18 @@ namespace Application.ShootSystem
     {
         private readonly Dictionary<ProjectileTypes, PoolFactory<Projectile>> _projectilesPools;
         private readonly Transform _shootPoint;
+        private readonly GameEntityTypes _ownerType;
         
         private PoolFactory<Projectile> _currentProjectilePool;
         
         public Weapon(
             Transform shootPoint, 
-            Dictionary<ProjectileTypes, PoolFactory<Projectile>> projectilePools)
+            Dictionary<ProjectileTypes, PoolFactory<Projectile>> projectilePools,
+            GameEntityTypes ownerType)
         {
             _shootPoint = shootPoint;
             _projectilesPools = projectilePools;
+            _ownerType = ownerType;
         }
 
         public void ChooseProjectile(ProjectileTypes projectileType)
@@ -25,7 +29,8 @@ namespace Application.ShootSystem
 
         public void Shoot()
         {
-            _currentProjectilePool.GetPoolEntity(_shootPoint.position, Quaternion.identity);
+            var projectile = _currentProjectilePool.GetPoolEntity(_shootPoint.position, Quaternion.identity);
+            projectile.SetOwnerType(_ownerType);
         }
     }
 }

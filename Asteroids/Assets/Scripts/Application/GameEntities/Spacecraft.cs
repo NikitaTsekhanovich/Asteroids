@@ -27,10 +27,12 @@ namespace Application.GameEntities
             _health = new Health(3);
             _physicalMovement = new PhysicalMovement(2, 1, 2, rigidbody);
             _input = input;
-            _weapon = new Weapon(_shootPoint, projectilePools);
+            _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType);
             _weapon.ChooseProjectile(ProjectileTypes.Bullet);
             Subscribe();
         }
+        
+        [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
 
         private void Update()
         {
