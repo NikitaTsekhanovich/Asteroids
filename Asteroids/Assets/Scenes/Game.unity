@@ -482,7 +482,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelData:
     <PlayerSpawnPoint>k__BackingField: {fileID: 750973682}
-    <Spacecraft>k__BackingField: {fileID: 1401002412954476295, guid: 78c22d830b59520449a4ef069120c993, type: 3}
+    <SpacecraftPrefab>k__BackingField: {fileID: 1401002412954476295, guid: 78c22d830b59520449a4ef069120c993, type: 3}
+    <BulletPrefab>k__BackingField: {fileID: 7810277948721765342, guid: 66d281c30c934264bbb87ff0630c89c8, type: 3}
+    <LaserPrefab>k__BackingField: {fileID: 4008068630236668970, guid: 59c4dbb93ffd11c4b9cb269a9710d47c, type: 3}
 --- !u!4 &1373108203
 Transform:
   m_ObjectHideFlags: 0

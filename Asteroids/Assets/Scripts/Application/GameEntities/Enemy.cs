@@ -22,7 +22,7 @@ namespace Application.GameEntities
             base.ActiveInit(startPosition, startRotation);
         }
 
-        public void ICanTakeDamage(int damage)
+        public void TakeDamage(int damage)
         {
             _health.TakeDamage(damage);
         }

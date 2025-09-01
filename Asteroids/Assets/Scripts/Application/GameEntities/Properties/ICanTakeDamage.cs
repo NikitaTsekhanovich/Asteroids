@@ -2,6 +2,6 @@ namespace Application.GameEntities.Properties
 {
     public interface ICanTakeDamage
     {
-        public void ICanTakeDamage(int damage);
+        public void TakeDamage(int damage);
     }
 }

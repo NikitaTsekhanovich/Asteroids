@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
 using Application.Inputs;
+using Application.ShootSystem;
 using UniRx;
 using UnityEngine;
 
@@ -9,23 +11,30 @@ namespace Application.GameEntities
     [RequireComponent(typeof(Rigidbody2D))]
     public class Spacecraft : MonoBehaviour, ICanTakeDamage
     {
+        [SerializeField] private Transform _shootPoint;
+        
         private Health _health;
         private PhysicalMovement _physicalMovement;
         private IInput _input;
+        private Weapon _weapon;
         private Vector2 _moveDirection;
         
-        public void Initialize(IInput input)
+        public void Initialize(
+            IInput input,
+            Dictionary<ProjectileTypes, PoolFactory<Projectile>> projectilePools)
         {
             var rigidbody = GetComponent<Rigidbody2D>();
             _health = new Health(3);
             _physicalMovement = new PhysicalMovement(2, 1, 2, rigidbody);
             _input = input;
+            _weapon = new Weapon(_shootPoint, projectilePools);
+            _weapon.ChooseProjectile(ProjectileTypes.Bullet);
             Subscribe();
         }
 
         private void Update()
         {
-            _input.Update();
+            _input.ReadInput();
         }
 
         private void FixedUpdate()
@@ -38,7 +47,7 @@ namespace Application.GameEntities
             Unsubscribe();
         }
         
-        public void ICanTakeDamage(int damage)
+        public void TakeDamage(int damage)
         {
             _health.TakeDamage(damage);
         }
@@ -46,13 +55,27 @@ namespace Application.GameEntities
         private void Subscribe()
         {
             _input.MoveInput.Subscribe(moveInput => _moveDirection = moveInput);
+            _input.OnShoot += Shoot;
+            _input.OnChooseProjectile += ChooseProjectile;
             _health.OnDied += Die;
         }
 
         private void Unsubscribe()
         {
             _input.MoveInput.Dispose();
+            _input.OnShoot -= Shoot;
+            _input.OnChooseProjectile -= ChooseProjectile;
             _health.OnDied -= Die;
+        }
+
+        private void Shoot()
+        {
+            _weapon.Shoot();
+        }
+
+        private void ChooseProjectile(ProjectileTypes projectileType)
+        {
+            _weapon.ChooseProjectile(projectileType);
         }
 
         private void Die()
