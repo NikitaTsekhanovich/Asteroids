@@ -1,0 +1,9 @@
+{
+  "Guid": "SpacecraftConfig",
+  "MaxHealth": 0,
+  "Damage": 0,
+  "MaxSpeed": 0.0,
+  "Acceleration": 0.0,
+  "Slowdown": 0.0,
+  "RateFire": 0.0
+}
