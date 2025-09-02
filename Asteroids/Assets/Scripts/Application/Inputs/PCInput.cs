@@ -13,10 +13,8 @@ namespace Application.Inputs
         
         public void ReadInput()
         {
-            MoveInput.Value = new(
-                Input.GetAxisRaw("Horizontal"), 
-                Input.GetAxisRaw("Vertical"));
-            
+            MoveReadInput();
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnShoot.Invoke();
@@ -31,6 +29,18 @@ namespace Application.Inputs
             {
                 OnChooseProjectile.Invoke(ProjectileTypes.Laser);
             }
+        }
+
+        private void MoveReadInput()
+        {
+            var verticalInput = 0;
+
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+                verticalInput = 1;
+            
+            MoveInput.Value = new(
+                Input.GetAxisRaw("Horizontal"), 
+                verticalInput);
         }
     }
 }

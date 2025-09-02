@@ -29,7 +29,7 @@ namespace Application.ShootSystem
 
         public void Shoot()
         {
-            var projectile = _currentProjectilePool.GetPoolEntity(_shootPoint.position, Quaternion.identity);
+            var projectile = _currentProjectilePool.GetPoolEntity(_shootPoint.position, _shootPoint.rotation);
             projectile.SetOwnerType(_ownerType);
         }
     }

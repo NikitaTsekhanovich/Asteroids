@@ -14,7 +14,7 @@ namespace Application.GameEntities
         [SerializeField] private Transform _shootPoint;
         
         private Health _health;
-        private PhysicalMovement _physicalMovement;
+        private InertialMovement _inertialMovement;
         private IInput _input;
         private Weapon _weapon;
         private Vector2 _moveDirection;
@@ -25,7 +25,7 @@ namespace Application.GameEntities
         {
             var rigidbody = GetComponent<Rigidbody2D>();
             _health = new Health(3);
-            _physicalMovement = new PhysicalMovement(2, 1, 2, rigidbody);
+            _inertialMovement = new InertialMovement(100,7, 5, 2, 2, rigidbody);
             _input = input;
             _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType);
             _weapon.ChooseProjectile(ProjectileTypes.Bullet);
@@ -41,7 +41,7 @@ namespace Application.GameEntities
 
         private void FixedUpdate()
         {
-            _physicalMovement.Move(_moveDirection);
+            _inertialMovement.Move(_moveDirection);
         }
 
         private void OnDestroy()
