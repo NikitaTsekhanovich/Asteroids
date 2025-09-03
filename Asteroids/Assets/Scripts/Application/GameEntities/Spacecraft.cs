@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
 using Application.Inputs;
+using Application.PoolFactories;
 using Application.ShootSystem;
 using UniRx;
 using UnityEngine;
@@ -33,11 +34,6 @@ namespace Application.GameEntities
         }
         
         [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
-
-        private void Update()
-        {
-            _input.ReadInput();
-        }
 
         private void FixedUpdate()
         {
@@ -82,7 +78,7 @@ namespace Application.GameEntities
 
         private void Die()
         {
-            
+            Debug.Log("DIE");
         }
     }
 }

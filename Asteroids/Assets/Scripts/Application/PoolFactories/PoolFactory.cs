@@ -2,7 +2,7 @@ using Domain;
 using Domain.Properties;
 using UnityEngine;
 
-namespace Application
+namespace Application.PoolFactories
 {
     public class PoolFactory<T>
         where T : MonoBehaviour, IPoolEntity

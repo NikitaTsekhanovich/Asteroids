@@ -2,7 +2,7 @@ using System;
 using Domain.Properties;
 using UnityEngine;
 
-namespace Application
+namespace Application.GameEntities
 {
     public abstract class PoolEntity : MonoBehaviour, IPoolEntity
     {

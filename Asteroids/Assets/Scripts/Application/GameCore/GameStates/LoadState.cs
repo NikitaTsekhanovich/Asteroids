@@ -1,27 +1,39 @@
+using System.Collections.Generic;
 using Application.Inputs;
+using Application.PoolFactories;
 using Application.ShootSystem;
 using Domain.Properties;
 using UnityEngine;
-using System.Collections.Generic;
 
-namespace Application.StateMachines.GameStates
+namespace Application.GameCore.GameStates
 {
     public class LoadState : IState
     {
-        public LoadState(LevelData levelData)
+        private readonly GameStateMachine _gameStateMachine;
+        
+        public LoadState(
+            LevelData levelData,
+            GameStateMachine gameStateMachine,
+            IInput input,
+            out AsteroidPoolFactory asteroidPoolFactory)
         {
-            var bulletPoolFactory = new PoolFactory<Projectile>(levelData.BulletPrefab, 10);
-            var laserPoolFactory = new PoolFactory<Projectile>(levelData.LaserPrefab, 5);
+            _gameStateMachine = gameStateMachine;
+            
+            var bulletPoolFactory = new ProjectilePoolFactory(levelData.BulletPrefab, 10);
+            var laserPoolFactory = new ProjectilePoolFactory(levelData.LaserPrefab, 5);
             
             SpawnPlayer(
                 levelData,
                 bulletPoolFactory,
-                laserPoolFactory);
+                laserPoolFactory,
+                input);
+
+            asteroidPoolFactory = new AsteroidPoolFactory(levelData.AsteroidPrefab, 4);
         }
         
         public void Enter()
         {
-            
+            _gameStateMachine.EnterIn<LoopState>();
         }
 
         public void Exit()
@@ -32,7 +44,8 @@ namespace Application.StateMachines.GameStates
         private void SpawnPlayer(
             LevelData levelData,
             PoolFactory<Projectile> bulletPoolFactory,
-            PoolFactory<Projectile> laserPoolFactory)
+            PoolFactory<Projectile> laserPoolFactory,
+            IInput input)
         {
             var spawnPosition = new Vector3(
                 levelData.PlayerSpawnPoint.position.x,
@@ -43,16 +56,14 @@ namespace Application.StateMachines.GameStates
                 levelData.SpacecraftPrefab, 
                 spawnPosition, 
                 levelData.PlayerSpawnPoint.rotation);
-
-            var pcInput = new PCInput();
-
+            
             var projectilePools = new Dictionary<ProjectileTypes, PoolFactory<Projectile>>
             {
                 [levelData.BulletPrefab.ProjectileType] = bulletPoolFactory,
                 [levelData.LaserPrefab.ProjectileType] = laserPoolFactory,
             };
             
-            spacecraft.Initialize(pcInput, projectilePools);
+            spacecraft.Initialize(input, projectilePools);
         }
     }
 }

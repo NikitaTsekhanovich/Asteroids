@@ -1,7 +1,6 @@
-using Application.StateMachines;
 using UnityEngine;
 
-namespace Application
+namespace Application.GameCore
 {
     public class Game : MonoBehaviour
     {
