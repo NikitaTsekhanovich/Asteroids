@@ -34,9 +34,14 @@ namespace Application.StateMachines.GameStates
             PoolFactory<Projectile> bulletPoolFactory,
             PoolFactory<Projectile> laserPoolFactory)
         {
+            var spawnPosition = new Vector3(
+                levelData.PlayerSpawnPoint.position.x,
+                levelData.PlayerSpawnPoint.position.y,
+                0);
+            
             var spacecraft = Object.Instantiate(
                 levelData.SpacecraftPrefab, 
-                levelData.PlayerSpawnPoint.position, 
+                spawnPosition, 
                 levelData.PlayerSpawnPoint.rotation);
 
             var pcInput = new PCInput();

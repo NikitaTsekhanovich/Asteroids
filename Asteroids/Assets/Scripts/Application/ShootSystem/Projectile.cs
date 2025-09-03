@@ -16,7 +16,7 @@ namespace Application.ShootSystem
         private void Update()
         {
             var direction = new Vector3(-transform.right.y, transform.right.x, 0f);
-            transform.position += direction * Time.deltaTime;
+            transform.position += direction * 5f * Time.deltaTime;
         }
 
         private void OnDestroy()

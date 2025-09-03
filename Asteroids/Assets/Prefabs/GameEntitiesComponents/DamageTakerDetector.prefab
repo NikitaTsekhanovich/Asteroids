@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7344233926007880613}
   - component: {fileID: 6430993151873463586}
-  - component: {fileID: 6652501098602147980}
   m_Layer: 0
   m_Name: DamageTakerDetector
   m_TagString: Untagged
@@ -45,38 +44,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffe8c87c04e371947b4ad8e357a262d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &6652501098602147980
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3669646644725933987}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.0076410174, y: 0}
-  m_Size: {x: 1.1876857, y: 3.4145427}
-  m_Direction: 0

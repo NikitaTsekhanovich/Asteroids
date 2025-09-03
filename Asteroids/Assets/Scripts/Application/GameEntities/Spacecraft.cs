@@ -25,7 +25,7 @@ namespace Application.GameEntities
         {
             var rigidbody = GetComponent<Rigidbody2D>();
             _health = new Health(3);
-            _inertialMovement = new InertialMovement(100,7, 5, 2, 2, rigidbody);
+            _inertialMovement = new InertialMovement(150,7, 6, 1, 2, rigidbody);
             _input = input;
             _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType);
             _weapon.ChooseProjectile(ProjectileTypes.Bullet);
