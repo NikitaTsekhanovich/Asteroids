@@ -1,3 +1,4 @@
+using Application.Configs;
 using Application.GameEntities;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
@@ -12,6 +13,15 @@ namespace Application.ShootSystem
         private float _lifeTime;
         private float _currentLifeTime;
         private float _speed;
+        private int _damage;
+        
+        public void Construct(ProjectileConfig projectileConfig)
+        {
+            _lifeTime = projectileConfig.LifeTime;
+            _speed = projectileConfig.Speed;
+            _damage = projectileConfig.Damage;
+            _damageTakerDetector.OnDamageTakerDetected += DealDamage;
+        }
         
         [field: SerializeField] public ProjectileTypes ProjectileType { get; private set; }
         
@@ -25,13 +35,6 @@ namespace Application.ShootSystem
         {
             _damageTakerDetector.OnDamageTakerDetected -= DealDamage;
         }
-
-        public void Construct()
-        {
-            _lifeTime = 5f;
-            _speed = 5f;
-            _damageTakerDetector.OnDamageTakerDetected += DealDamage;
-        }
         
         public void SetOwnerType(GameEntityTypes ownerType)
         {
@@ -40,7 +43,7 @@ namespace Application.ShootSystem
 
         protected virtual void DealDamage(ICanTakeDamage damageTaker)
         {
-            damageTaker.TakeDamage(1);
+            damageTaker.TakeDamage(_damage);
         }
         
         private void Move()

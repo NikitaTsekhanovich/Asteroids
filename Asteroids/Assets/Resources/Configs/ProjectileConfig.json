@@ -1,0 +1,6 @@
+{
+  "Guid": "ProjectileConfig",
+  "LifeTime": 4.0,
+  "Speed": 5.0,
+  "Damage": 1
+}

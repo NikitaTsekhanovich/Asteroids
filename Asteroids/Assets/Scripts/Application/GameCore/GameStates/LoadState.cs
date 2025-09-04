@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Application.Configs;
 using Application.Inputs;
 using Application.PoolFactories;
 using Application.ShootSystem;
@@ -18,17 +19,25 @@ namespace Application.GameCore.GameStates
             out AsteroidPoolFactory asteroidPoolFactory)
         {
             _gameStateMachine = gameStateMachine;
-            
-            var bulletPoolFactory = new ProjectilePoolFactory(levelData.BulletPrefab, 10);
-            var laserPoolFactory = new ProjectilePoolFactory(levelData.LaserPrefab, 5);
+
+            var loadConfigSystem = new LoadConfigSystem();
+
+            var projectileConfig = loadConfigSystem.GetConfig<ProjectileConfig>(ProjectileConfig.Guid);
+            var bulletPoolFactory = new ProjectilePoolFactory(levelData.BulletPrefab, 10, projectileConfig);
+            bulletPoolFactory.CreatePool();
+            var laserPoolFactory = new ProjectilePoolFactory(levelData.LaserPrefab, 5, projectileConfig);
+            laserPoolFactory.CreatePool();
             
             SpawnPlayer(
                 levelData,
                 bulletPoolFactory,
                 laserPoolFactory,
-                input);
+                input,
+                loadConfigSystem);
 
-            asteroidPoolFactory = new AsteroidPoolFactory(levelData.AsteroidPrefab, 4);
+            var asteroidConfig = loadConfigSystem.GetConfig<AsteroidConfig>(AsteroidConfig.Guid);
+            asteroidPoolFactory = new AsteroidPoolFactory(levelData.AsteroidPrefab, 4, asteroidConfig);
+            asteroidPoolFactory.CreatePool();
         }
         
         public void Enter()
@@ -45,7 +54,8 @@ namespace Application.GameCore.GameStates
             LevelData levelData,
             PoolFactory<Projectile> bulletPoolFactory,
             PoolFactory<Projectile> laserPoolFactory,
-            IInput input)
+            IInput input,
+            LoadConfigSystem loadConfigSystem)
         {
             var spawnPosition = new Vector3(
                 levelData.PlayerSpawnPoint.position.x,
@@ -62,8 +72,9 @@ namespace Application.GameCore.GameStates
                 [levelData.BulletPrefab.ProjectileType] = bulletPoolFactory,
                 [levelData.LaserPrefab.ProjectileType] = laserPoolFactory,
             };
-            
-            spacecraft.Initialize(input, projectilePools);
+
+            var spacecraftConfig = loadConfigSystem.GetConfig<SpacecraftConfig>(SpacecraftConfig.Guid);
+            spacecraft.Construct(input, projectilePools, spacecraftConfig);
         }
     }
 }

@@ -8,14 +8,14 @@ namespace Application.PoolFactories
         where T : MonoBehaviour, IPoolEntity
     {
         private readonly T _entity;
-        private readonly PoolBase<T> _entitiesPool;
+        private readonly int _entityPreloadCount;
         
-        private bool _isDestroyed;
+        private PoolBase<T> _entitiesPool;
         
         public PoolFactory(T entity, int entityPreloadCount)
         {
             _entity = entity;
-            _entitiesPool = new PoolBase<T>(Preload, GetEntityAction, ReturnEntityAction, entityPreloadCount);
+            _entityPreloadCount = entityPreloadCount;
         }
         
         private void ReturnEntity(IPoolEntity entity) => _entitiesPool.Return((T)entity);
@@ -36,6 +36,11 @@ namespace Application.PoolFactories
             newEntity.ActiveInit(positionAppearance, rotationAppearance);
     
             return newEntity;
+        }
+
+        public void CreatePool()
+        {
+            _entitiesPool = new PoolBase<T>(Preload, GetEntityAction, ReturnEntityAction, _entityPreloadCount);
         }
     }
 }

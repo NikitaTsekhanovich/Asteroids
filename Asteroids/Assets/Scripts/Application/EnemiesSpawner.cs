@@ -10,6 +10,7 @@ namespace Application
         private readonly Transform[] _spawnPoints;
         private readonly Transform[] _startMovePoints;
         private readonly float _spawnInterval;
+        private readonly float _spawnFirstUfoDelay;
         
         private float _currentTime;
         
@@ -21,6 +22,7 @@ namespace Application
             _spawnPoints = levelData.EnemiesSpawnPoints;
             _startMovePoints = levelData.EnemiesStartMovePoints;
             _spawnInterval = 5f;
+            _spawnFirstUfoDelay = 10f;
         }
 
         public void Spawn()

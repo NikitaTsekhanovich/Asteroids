@@ -100,8 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eb7e95f40e6e3948a30827856f27a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigidbody: {fileID: 7482699527259423714}
   _damageTakerDetector: {fileID: 8954001040927808597}
+  Rigidbody: {fileID: 7482699527259423714}
   <GameEntityType>k__BackingField: 0
 --- !u!114 &8954001040927808597
 MonoBehaviour:

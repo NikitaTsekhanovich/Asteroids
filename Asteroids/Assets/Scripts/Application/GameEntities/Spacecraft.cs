@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Application.Configs;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
 using Application.Inputs;
@@ -15,18 +16,28 @@ namespace Application.GameEntities
         [SerializeField] private Transform _shootPoint;
         
         private Health _health;
+        private Score _score;
         private InertialMovement _inertialMovement;
         private IInput _input;
         private Weapon _weapon;
         private Vector2 _moveDirection;
         
-        public void Initialize(
+        public void Construct(
             IInput input,
-            Dictionary<ProjectileTypes, PoolFactory<Projectile>> projectilePools)
+            Dictionary<ProjectileTypes, PoolFactory<Projectile>> projectilePools,
+            SpacecraftConfig spacecraftConfig)
         {
             var rigidbody = GetComponent<Rigidbody2D>();
-            _health = new Health(3);
-            _inertialMovement = new InertialMovement(150,7, 6, 1, 2, rigidbody);
+            _inertialMovement = new InertialMovement(
+                spacecraftConfig.RotationSpeed,
+                spacecraftConfig.MaxSpeed, 
+                spacecraftConfig.Acceleration, 
+                spacecraftConfig.Decelerate, 
+                spacecraftConfig.ForceInertia, 
+                rigidbody);
+
+            _health = new Health(spacecraftConfig.MaxHealth);
+            _score = new Score();
             _input = input;
             _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType);
             _weapon.ChooseProjectile(ProjectileTypes.Bullet);
