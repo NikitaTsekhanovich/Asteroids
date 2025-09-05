@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Application.GameCore.GameStates;
+using Application.GameEntities;
+using Application.GameHandlers;
 using Application.Inputs;
 using Domain;
 using Domain.Properties;
@@ -9,7 +11,10 @@ namespace Application.GameCore
 {
     public class GameStateMachine : StateMachine
     {
-        public GameStateMachine(LevelData levelData)
+        public GameStateMachine(
+            LevelData levelData, 
+            ScoreHandler scoreHandler,
+            Spacecraft spacecraft)
         {
             var input = new PCInput();
             
@@ -19,6 +24,8 @@ namespace Application.GameCore
                     levelData, 
                     this,
                     input,
+                    scoreHandler,
+                    spacecraft,
                     out var asteroidPoolFactory),
                 [typeof(LoopState)] = new LoopState(
                     levelData, 

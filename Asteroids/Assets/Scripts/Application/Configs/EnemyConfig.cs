@@ -6,16 +6,19 @@ namespace Application.Configs
             string guid,
             int maxHealth, 
             int damage, 
+            int scoreValue,
             float speed) : 
             base(guid)
         {
             MaxHealth = maxHealth;
             Damage = damage;
+            ScoreValue = scoreValue;
             Speed = speed;
         }
         
         public int MaxHealth { get; private set; }
         public int Damage { get; private set; }
+        public int ScoreValue { get; private set; }
         public float Speed { get; private set; }
     }
 }

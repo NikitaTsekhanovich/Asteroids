@@ -6,10 +6,20 @@ namespace Presentation.ViewModels
     {
         public override void InstallBindings()
         {
-            // Container
-            //     .BindInterfacesAndSelfTo<ScoreViewModel>()
-            //     .AsSingle()
-            //     .NonLazy();
+            Container
+                .BindInterfacesAndSelfTo<ScoreViewModel>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .BindInterfacesAndSelfTo<HealthViewModel>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .BindInterfacesAndSelfTo<SpacecraftInfoViewModel>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

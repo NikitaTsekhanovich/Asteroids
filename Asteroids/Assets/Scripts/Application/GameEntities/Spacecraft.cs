@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Application.Configs;
 using Application.GameEntities.Properties;
@@ -14,13 +15,13 @@ namespace Application.GameEntities
     public class Spacecraft : MonoBehaviour, ICanTakeDamage
     {
         [SerializeField] private Transform _shootPoint;
-        
-        private Health _health;
-        private Score _score;
-        private InertialMovement _inertialMovement;
+       
         private IInput _input;
         private Weapon _weapon;
         private Vector2 _moveDirection;
+        
+        public readonly ReactiveProperty<Vector2> Position = new ();
+        public readonly ReactiveProperty<Quaternion> Rotation = new ();
         
         public void Construct(
             IInput input,
@@ -28,7 +29,7 @@ namespace Application.GameEntities
             SpacecraftConfig spacecraftConfig)
         {
             var rigidbody = GetComponent<Rigidbody2D>();
-            _inertialMovement = new InertialMovement(
+            InertialMovement = new InertialMovement(
                 spacecraftConfig.RotationSpeed,
                 spacecraftConfig.MaxSpeed, 
                 spacecraftConfig.Acceleration, 
@@ -36,19 +37,29 @@ namespace Application.GameEntities
                 spacecraftConfig.ForceInertia, 
                 rigidbody);
 
-            _health = new Health(spacecraftConfig.MaxHealth);
-            _score = new Score();
+            Health = new Health(spacecraftConfig.MaxHealth);
             _input = input;
             _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType);
             _weapon.ChooseProjectile(ProjectileTypes.Bullet);
             Subscribe();
+            
+            OnInitialized?.Invoke(this);
         }
-        
+
         [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
+        public Health Health { get; private set; }
+        public InertialMovement InertialMovement { get; private set; }
+        public event Action<Spacecraft> OnInitialized;
+
+        private void Update()
+        {
+            Position.Value = transform.position;
+            Rotation.Value = transform.rotation;
+        }
 
         private void FixedUpdate()
         {
-            _inertialMovement.Move(_moveDirection);
+            InertialMovement.Move(_moveDirection);
         }
 
         private void OnDestroy()
@@ -58,7 +69,7 @@ namespace Application.GameEntities
         
         public void TakeDamage(int damage)
         {
-            _health.TakeDamage(damage);
+            Health.TakeDamage(damage);
         }
 
         private void Subscribe()
@@ -66,7 +77,7 @@ namespace Application.GameEntities
             _input.MoveInput.Subscribe(moveInput => _moveDirection = moveInput);
             _input.OnShoot += Shoot;
             _input.OnChooseProjectile += ChooseProjectile;
-            _health.OnDied += Die;
+            Health.OnDied += Die;
         }
 
         private void Unsubscribe()
@@ -74,7 +85,7 @@ namespace Application.GameEntities
             _input.MoveInput.Dispose();
             _input.OnShoot -= Shoot;
             _input.OnChooseProjectile -= ChooseProjectile;
-            _health.OnDied -= Die;
+            Health.OnDied -= Die;
         }
 
         private void Shoot()

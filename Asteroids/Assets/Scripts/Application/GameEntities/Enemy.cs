@@ -1,6 +1,7 @@
 using Application.Configs;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
+using Application.GameHandlers;
 using UnityEngine;
 
 namespace Application.GameEntities
@@ -11,13 +12,17 @@ namespace Application.GameEntities
         
         private Health _health;
         private int _damage;
+        private int _scoreValue;
+        private ScoreHandler _scoreHandler;
         
         [SerializeField] protected Rigidbody2D Rigidbody;
         
-        public virtual void Construct(EnemyConfig enemyConfig)
+        public virtual void Construct(EnemyConfig enemyConfig, ScoreHandler scoreHandler)
         {
             _health = new Health(enemyConfig.MaxHealth);
             _damage = enemyConfig.Damage;
+            _scoreValue = enemyConfig.ScoreValue;
+            _scoreHandler = scoreHandler;
             _health.OnDied += Die;
             _damageTakerDetector.OnDamageTakerDetected += DealDamage;
         }
@@ -43,6 +48,7 @@ namespace Application.GameEntities
         private void Die()
         {
             ReturnToPool();
+            _scoreHandler.ChangeScore(_scoreValue);
             _health.ResetHealth();
             Rigidbody.velocity = Vector2.zero;
         }

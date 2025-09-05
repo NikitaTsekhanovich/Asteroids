@@ -1,4 +1,5 @@
 using System;
+using UniRx;
 
 namespace Application.GameEntitiesComponents
 {
@@ -6,30 +7,30 @@ namespace Application.GameEntitiesComponents
     {
         private readonly int _maxHealth;
         
-        private int _currentHealth;
+        public readonly ReactiveProperty<int> CurrentHealth;
         
         public Health(int maxHealth)
         {
             _maxHealth = maxHealth;
-            _currentHealth = _maxHealth;
+            CurrentHealth = new ReactiveProperty<int>(_maxHealth);
         }
 
         public event Action OnDied;
 
         public void TakeDamage(int damage)
         {
-            _currentHealth -= damage;
+            CurrentHealth.Value -= damage;
 
-            if (_currentHealth <= 0)
+            if (CurrentHealth.Value <= 0)
             {
                 OnDied.Invoke();
-                _currentHealth = 0;
+                CurrentHealth.Value = 0;
             }
         }
 
         public void ResetHealth()
         {
-            _currentHealth = _maxHealth;
+            CurrentHealth.Value = _maxHealth;
         }
     }
 }

@@ -1,38 +1,31 @@
 using System;
-using Application.GameEntitiesComponents;
+using Application.GameHandlers;
 using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace Presentation.ViewModels
 {
-    public class ScoreViewModel : IInitializable, IDisposable
+    public class ScoreViewModel : IDisposable
     {
-        private readonly Score _score;
+        private ScoreHandler _scoreHandler;
         
         public readonly ReactiveProperty<string> ScoreText = new ();
-
-        public ScoreViewModel(Score score)
-        {
-            _score = score;
-        }
         
-        public void Initialize()
+        [Inject]
+        private void Construct(ScoreHandler scoreHandler)
         {
-            Debug.Log("Score Initialize");
-            OnChangedScore(0);
-            _score.CurrentScore.Subscribe(OnChangedScore);
+            _scoreHandler = scoreHandler;
+            _scoreHandler.CurrentScore.Subscribe(OnChangedScore);
         }
 
         public void Dispose()
         {
-            Debug.Log("Score Dispose");
-            _score.CurrentScore.Dispose();
+            _scoreHandler.CurrentScore.Dispose();
         }
 
         private void OnChangedScore(int score)
         {
             ScoreText.Value = $"Score: {score}";
-        }
+        } 
     }
 }

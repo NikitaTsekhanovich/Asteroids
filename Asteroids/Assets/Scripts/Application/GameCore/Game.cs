@@ -1,4 +1,7 @@
+using Application.GameEntities;
+using Application.GameHandlers;
 using UnityEngine;
+using Zenject;
 
 namespace Application.GameCore
 {
@@ -6,11 +9,17 @@ namespace Application.GameCore
     {
         [SerializeField] private LevelData _levelData;
         
+        [Inject] private ScoreHandler _scoreHandler;
+        [Inject] private Spacecraft _spacecraft;
+        
         private GameStateMachine _gameStateMachine;
         
         private void Awake()
         {
-            _gameStateMachine = new GameStateMachine(_levelData);
+            _gameStateMachine = new GameStateMachine(
+                _levelData, 
+                _scoreHandler,
+                _spacecraft);
         }
 
         private void Update()

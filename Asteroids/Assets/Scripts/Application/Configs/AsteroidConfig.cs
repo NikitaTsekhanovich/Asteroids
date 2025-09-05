@@ -10,11 +10,13 @@ namespace Application.Configs
         public AsteroidConfig(
             int maxHealth = 0, 
             int damage = 0, 
+            int scoreValue = 0,
             float speed = 0f) : 
             base(
                 Guid,
                 maxHealth, 
                 damage, 
+                scoreValue,
                 speed)
         {
             

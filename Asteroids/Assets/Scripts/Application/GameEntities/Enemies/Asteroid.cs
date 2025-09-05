@@ -1,5 +1,6 @@
 using Application.Configs;
 using Application.GameEntitiesComponents;
+using Application.GameHandlers;
 using UnityEngine;
 
 namespace Application.GameEntities.Enemies
@@ -8,9 +9,9 @@ namespace Application.GameEntities.Enemies
     {
         private LinearMovement _linearMovement;
         
-        public override void Construct(EnemyConfig enemyConfig)
+        public override void Construct(EnemyConfig enemyConfig, ScoreHandler scoreHandler)
         {
-            base.Construct(enemyConfig);
+            base.Construct(enemyConfig, scoreHandler);
             _linearMovement = new LinearMovement(Rigidbody, enemyConfig.Speed);
         }
         

@@ -2,5 +2,6 @@
   "Guid": "AsteroidConfig",
   "MaxHealth": 1,
   "Damage": 1,
+  "ScoreValue" : 1,
   "Speed": 2.0
 }

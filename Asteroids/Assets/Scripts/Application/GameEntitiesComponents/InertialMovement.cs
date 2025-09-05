@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 namespace Application.GameEntitiesComponents
@@ -11,9 +12,10 @@ namespace Application.GameEntitiesComponents
         private readonly float _forceInertia;
         private readonly Rigidbody2D _rigidbody;
         
-        private float _currentSpeed;
         private float _previousVelocityY;
         private Vector3 _inertialDirection;
+        
+        public readonly ReactiveProperty<float> CurrentSpeed = new ();
         
         public InertialMovement(
             float speedRotation,
@@ -65,25 +67,25 @@ namespace Application.GameEntitiesComponents
                 _previousVelocityY = moveDirectionY;
                 Accelerate();
             }
-            else if (_currentSpeed != 0)
+            else if (CurrentSpeed.Value != 0)
             {
                 Decelerate();
-                return _previousVelocityY * _currentSpeed;
+                return _previousVelocityY * CurrentSpeed.Value;
             }
             
-            return moveDirectionY * _currentSpeed;
+            return moveDirectionY * CurrentSpeed.Value;
         }
 
         private void Accelerate()
         {
-            var newSpeed = _currentSpeed + _acceleration * Time.deltaTime;
-            _currentSpeed = Mathf.Min(newSpeed, _maxSpeed);
+            var newSpeed = CurrentSpeed.Value + _acceleration * Time.deltaTime;
+            CurrentSpeed.Value = Mathf.Min(newSpeed, _maxSpeed);
         }
 
         private void Decelerate()
         {
-            var newSpeed = _currentSpeed - _decelerate * Time.deltaTime;
-            _currentSpeed = Mathf.Max(newSpeed, 0);
+            var newSpeed = CurrentSpeed.Value - _decelerate * Time.deltaTime;
+            CurrentSpeed.Value = Mathf.Max(newSpeed, 0);
         }
     }
 }
