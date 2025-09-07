@@ -12,13 +12,16 @@ using UnityEngine;
 namespace Application.GameEntities
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Spacecraft : MonoBehaviour, ICanTakeDamage
+    public class Spacecraft : MonoBehaviour, ICanTakeDamage, ICanEncounter
     {
         [SerializeField] private Transform _shootPoint;
+        [SerializeField] private EncounterEntityDetector _encounterEntityDetector;
        
         private IInput _input;
         private Weapon _weapon;
+        private EncounterHandler _encounterHandler;
         private Vector2 _moveDirection;
+        private bool _isCanMove;
         
         public readonly ReactiveProperty<Vector2> Position = new ();
         public readonly ReactiveProperty<Quaternion> Rotation = new ();
@@ -38,10 +41,13 @@ namespace Application.GameEntities
                 rigidbody);
 
             Health = new Health(spacecraftConfig.MaxHealth);
+            _encounterHandler = new EncounterHandler(rigidbody);
             _input = input;
             _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType);
             _weapon.ChooseProjectile(ProjectileTypes.Bullet);
+            _encounterEntityDetector.SetOwnerType(GameEntityType);
             Subscribe();
+            _isCanMove = true;
             
             OnInitialized?.Invoke(this);
         }
@@ -49,6 +55,7 @@ namespace Application.GameEntities
         [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
         public Health Health { get; private set; }
         public InertialMovement InertialMovement { get; private set; }
+        public Transform Transform => transform;
         public event Action<Spacecraft> OnInitialized;
 
         private void Update()
@@ -59,12 +66,18 @@ namespace Application.GameEntities
 
         private void FixedUpdate()
         {
-            InertialMovement.Move(_moveDirection);
+            if (_isCanMove)
+                InertialMovement.Move(_moveDirection);
         }
 
         private void OnDestroy()
         {
             Unsubscribe();
+        }
+        
+        public void Encounter(Transform encounteredEntity)
+        {
+            _encounterHandler.Encounter(encounteredEntity);
         }
         
         public void TakeDamage(int damage)
@@ -78,6 +91,7 @@ namespace Application.GameEntities
             _input.OnShoot += Shoot;
             _input.OnChooseProjectile += ChooseProjectile;
             Health.OnDied += Die;
+            _encounterEntityDetector.OnEncounter += Encounter;
         }
 
         private void Unsubscribe()
@@ -86,6 +100,7 @@ namespace Application.GameEntities
             _input.OnShoot -= Shoot;
             _input.OnChooseProjectile -= ChooseProjectile;
             Health.OnDied -= Die;
+            _encounterEntityDetector.OnEncounter -= Encounter;
         }
 
         private void Shoot()

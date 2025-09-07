@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 8190042916778409049}
   - component: {fileID: 8728014386136242675}
   - component: {fileID: 7979542552442968854}
+  - component: {fileID: 7508633925323729265}
+  - component: {fileID: -6275921232043755564}
   - component: {fileID: 6047244191729711335}
   - component: {fileID: 4241841155688889104}
-  - component: {fileID: -6275921232043755564}
   m_Layer: 0
   m_Name: Ufo
   m_TagString: Untagged
@@ -101,8 +102,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damageTakerDetector: {fileID: -6275921232043755564}
-  Rigidbody: {fileID: 6047244191729711335}
+  _encounterEntityDetector: {fileID: 7508633925323729265}
   <GameEntityType>k__BackingField: 0
+--- !u!114 &7508633925323729265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474373284475554643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dadaebdec81427144b7d9be8db1eab40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-6275921232043755564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474373284475554643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe8c87c04e371947b4ad8e357a262d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &6047244191729711335
 Rigidbody2D:
   serializedVersion: 4
@@ -165,15 +190,3 @@ CircleCollider2D:
   m_Offset: {x: -0.035300612, y: 0}
   serializedVersion: 2
   m_Radius: 1.6578964
---- !u!114 &-6275921232043755564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1474373284475554643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffe8c87c04e371947b4ad8e357a262d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

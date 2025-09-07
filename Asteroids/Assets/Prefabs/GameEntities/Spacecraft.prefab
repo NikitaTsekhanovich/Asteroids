@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6318658955540490067}
   - component: {fileID: 8925143184187795624}
   - component: {fileID: 1401002412954476295}
+  - component: {fileID: 8862313212381934225}
   - component: {fileID: 1203172168899694532}
   - component: {fileID: 3964965620102040028}
   m_Layer: 0
@@ -101,7 +102,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shootPoint: {fileID: 5829116430879331881}
+  _encounterEntityDetector: {fileID: 8862313212381934225}
   <GameEntityType>k__BackingField: 1
+--- !u!114 &8862313212381934225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4119930843170293389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dadaebdec81427144b7d9be8db1eab40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &1203172168899694532
 Rigidbody2D:
   serializedVersion: 4
