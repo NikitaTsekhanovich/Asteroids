@@ -13,7 +13,6 @@ namespace Application.GameEntitiesComponents
         
         public void Encounter(Transform encounteredEntity)
         {
-            // _rigidbody.velocity = Vector2.zero;
             var directionBounce = _rigidbody.position - (Vector2)encounteredEntity.position;
             _rigidbody.velocity = directionBounce;
         }

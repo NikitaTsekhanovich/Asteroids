@@ -28,7 +28,7 @@ namespace Application.GameEntities
             _damage = enemyConfig.Damage;
             _scoreValue = enemyConfig.ScoreValue;
             _scoreHandler = scoreHandler;
-            _encounterEntityDetector.SetOwnerType(GameEntityType);
+            _encounterEntityDetector.SetOwner(this);
             
             _health.OnDied += Die;
             _damageTakerDetector.OnDamageTakerDetected += DealDamage;
@@ -37,6 +37,7 @@ namespace Application.GameEntities
         
         [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
         public Transform Transform => transform;
+        public bool IsCanEncounter => true;
 
         private void OnDestroy()
         {

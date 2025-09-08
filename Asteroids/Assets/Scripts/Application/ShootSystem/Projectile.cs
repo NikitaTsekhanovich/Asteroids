@@ -15,7 +15,7 @@ namespace Application.ShootSystem
         private float _speed;
         private int _damage;
         
-        public void Construct(ProjectileConfig projectileConfig)
+        public virtual void Construct(ProjectileConfig projectileConfig)
         {
             _lifeTime = projectileConfig.LifeTime;
             _speed = projectileConfig.Speed;

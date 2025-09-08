@@ -8,8 +8,8 @@ namespace Domain
     {
         private ICanUpdate _updateState;
         private ICanFixedUpdate _fixedUpdateState;
-        private IState _currentState;
         
+        protected IState CurrentState;
         protected Dictionary<Type, IState> States;
         
         public void EnterIn<TState>() 
@@ -17,13 +17,13 @@ namespace Domain
         {
             if (States.TryGetValue(typeof(TState), out IState state))
             {
-                _currentState?.Exit();
+                CurrentState?.Exit();
                 
-                _currentState = state;
-                _updateState = _currentState as ICanUpdate;
-                _fixedUpdateState = _currentState as ICanFixedUpdate;
+                CurrentState = state;
+                _updateState = CurrentState as ICanUpdate;
+                _fixedUpdateState = CurrentState as ICanFixedUpdate;
                 
-                _currentState.Enter();
+                CurrentState.Enter();
             }
         }
 

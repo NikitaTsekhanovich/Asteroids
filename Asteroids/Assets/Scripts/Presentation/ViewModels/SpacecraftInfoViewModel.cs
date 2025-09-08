@@ -1,6 +1,5 @@
 using System;
 using Application.GameEntities;
-using Application.GameEntitiesComponents;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -9,7 +8,6 @@ namespace Presentation.ViewModels
 {
     public class SpacecraftInfoViewModel : IDisposable
     {
-        private InertialMovement _inertialMovement;
         private Spacecraft _spacecraft;
         
         public readonly ReactiveProperty<string> Position = new ();
@@ -24,7 +22,7 @@ namespace Presentation.ViewModels
         
         public void Dispose()
         {
-            _inertialMovement.CurrentSpeed.Dispose();
+            _spacecraft.CurrentSpeed.Dispose();
             _spacecraft.Position.Dispose();
             _spacecraft.Rotation.Dispose();
         }
@@ -34,11 +32,10 @@ namespace Presentation.ViewModels
             spacecraft.OnInitialized -= OnInitializedSpacecraft;
             
             _spacecraft = spacecraft;
-            _inertialMovement = spacecraft.InertialMovement;
 
             _spacecraft.Position.Subscribe(OnChangedPosition);
             _spacecraft.Rotation.Subscribe(OnChangedRotation);
-            _inertialMovement.CurrentSpeed.Subscribe(OnChangedSpeed);
+            _spacecraft.CurrentSpeed.Subscribe(OnChangedSpeed);
         }
 
         private void OnChangedPosition(Vector2 position)

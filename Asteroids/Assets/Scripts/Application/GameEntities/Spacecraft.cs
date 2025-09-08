@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Application.Configs;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
+using Application.GameEntitiesComponents.Spacecraft;
+using Application.GameEntitiesComponents.Spacecraft.States;
 using Application.Inputs;
 using Application.PoolFactories;
 using Application.ShootSystem;
@@ -16,45 +18,46 @@ namespace Application.GameEntities
     {
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private EncounterEntityDetector _encounterEntityDetector;
+        [SerializeField] private ParticleSystem _invulnerabilityEffect;
        
+        private Rigidbody2D _rigidbody;
+        private SpacecraftStateMachine _spacecraftStateMachine;
         private IInput _input;
-        private Weapon _weapon;
         private EncounterHandler _encounterHandler;
-        private Vector2 _moveDirection;
-        private bool _isCanMove;
+        private Weapon _weapon;
         
         public readonly ReactiveProperty<Vector2> Position = new ();
         public readonly ReactiveProperty<Quaternion> Rotation = new ();
+        public readonly ReactiveProperty<float> CurrentSpeed = new ();
         
         public void Construct(
             IInput input,
             Dictionary<ProjectileTypes, PoolFactory<Projectile>> projectilePools,
             SpacecraftConfig spacecraftConfig)
         {
-            var rigidbody = GetComponent<Rigidbody2D>();
-            InertialMovement = new InertialMovement(
-                spacecraftConfig.RotationSpeed,
-                spacecraftConfig.MaxSpeed, 
-                spacecraftConfig.Acceleration, 
-                spacecraftConfig.Decelerate, 
-                spacecraftConfig.ForceInertia, 
-                rigidbody);
-
-            Health = new Health(spacecraftConfig.MaxHealth);
-            _encounterHandler = new EncounterHandler(rigidbody);
+            _rigidbody = GetComponent<Rigidbody2D>();
             _input = input;
-            _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType);
+            _encounterEntityDetector.SetOwner(this);
+            
+            _spacecraftStateMachine = new SpacecraftStateMachine(
+                spacecraftConfig,
+                _rigidbody,
+                _input,
+                _invulnerabilityEffect);
+            
+            _encounterHandler = new EncounterHandler(_rigidbody);
+            Health = new Health(spacecraftConfig.MaxHealth);
+            _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType, spacecraftConfig.WeaponReloadTime);
             _weapon.ChooseProjectile(ProjectileTypes.Bullet);
-            _encounterEntityDetector.SetOwnerType(GameEntityType);
+            
             Subscribe();
-            _isCanMove = true;
             
             OnInitialized?.Invoke(this);
         }
 
         [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
         public Health Health { get; private set; }
-        public InertialMovement InertialMovement { get; private set; }
+        public bool IsCanEncounter => _spacecraftStateMachine.GetCurrentTypeState() != typeof(InvulnerabilityState);
         public Transform Transform => transform;
         public event Action<Spacecraft> OnInitialized;
 
@@ -62,32 +65,39 @@ namespace Application.GameEntities
         {
             Position.Value = transform.position;
             Rotation.Value = transform.rotation;
+            CurrentSpeed.Value = _rigidbody.velocity.magnitude;
+            
+            _weapon.Reload();
+            
+            _spacecraftStateMachine?.UpdateSystem();
         }
 
         private void FixedUpdate()
         {
-            if (_isCanMove)
-                InertialMovement.Move(_moveDirection);
+            _spacecraftStateMachine?.FixedUpdateSystem();
         }
 
         private void OnDestroy()
         {
+            _spacecraftStateMachine.Dispose();
             Unsubscribe();
         }
         
         public void Encounter(Transform encounteredEntity)
         {
             _encounterHandler.Encounter(encounteredEntity);
+            _spacecraftStateMachine.EnterIn<InvulnerabilityState>();
         }
         
         public void TakeDamage(int damage)
         {
+            if (!IsCanEncounter) return;
+            
             Health.TakeDamage(damage);
         }
 
         private void Subscribe()
         {
-            _input.MoveInput.Subscribe(moveInput => _moveDirection = moveInput);
             _input.OnShoot += Shoot;
             _input.OnChooseProjectile += ChooseProjectile;
             Health.OnDied += Die;
@@ -96,7 +106,6 @@ namespace Application.GameEntities
 
         private void Unsubscribe()
         {
-            _input.MoveInput.Dispose();
             _input.OnShoot -= Shoot;
             _input.OnChooseProjectile -= ChooseProjectile;
             Health.OnDied -= Die;
@@ -105,6 +114,8 @@ namespace Application.GameEntities
 
         private void Shoot()
         {
+            if (!IsCanEncounter) return;
+            
             _weapon.Shoot();
         }
 

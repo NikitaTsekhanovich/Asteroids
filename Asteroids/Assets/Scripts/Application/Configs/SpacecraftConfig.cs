@@ -13,7 +13,9 @@ namespace Application.Configs
             float maxSpeed = 0, 
             float acceleration = 0, 
             float decelerate = 0,
-            float forceInertia = 0) : 
+            float forceInertia = 0,
+            float timeInvulnerability = 0,
+            float weaponReloadTime = 0) : 
             base(Guid)
         {
             MaxHealth = maxHealth;
@@ -22,6 +24,8 @@ namespace Application.Configs
             Acceleration = acceleration;
             Decelerate = decelerate;
             ForceInertia = forceInertia;
+            TimeInvulnerability = timeInvulnerability;
+            WeaponReloadTime = weaponReloadTime;
         }
         
         public int MaxHealth { get; private set; }
@@ -30,5 +34,7 @@ namespace Application.Configs
         public float Acceleration { get; private set; }
         public float Decelerate { get; private set; }
         public float ForceInertia { get; private set; }
+        public float TimeInvulnerability { get; private set; }
+        public float WeaponReloadTime { get; private set; }
     }
 }

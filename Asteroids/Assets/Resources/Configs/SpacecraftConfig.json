@@ -5,5 +5,7 @@
   "MaxSpeed": 7.0,
   "Acceleration": 6.0,
   "Decelerate": 1.0,
-  "ForceInertia": 2.0
+  "ForceInertia": 2.0,
+  "TimeInvulnerability": 3.0,
+  "WeaponReloadTime": 1.0
 }
