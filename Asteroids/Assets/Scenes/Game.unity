@@ -7646,7 +7646,8 @@ MonoBehaviour:
   _levelData:
     <BulletPrefab>k__BackingField: {fileID: 7810277948721765342, guid: 66d281c30c934264bbb87ff0630c89c8, type: 3}
     <LaserPrefab>k__BackingField: {fileID: 4008068630236668970, guid: 59c4dbb93ffd11c4b9cb269a9710d47c, type: 3}
-    <AsteroidPrefab>k__BackingField: {fileID: 5224174898536399538, guid: 21edf7b61c13c604f808ad2f03207b9b, type: 3}
+    <LargeAsteroidPrefab>k__BackingField: {fileID: 4813509014324473341, guid: 21edf7b61c13c604f808ad2f03207b9b, type: 3}
+    <SmallAsteroidPrefab>k__BackingField: {fileID: 3365479588586284686, guid: f771ff422741cf745b0e2bf5f28e1037, type: 3}
     <UfoPrefab>k__BackingField: {fileID: 7979542552442968854, guid: ea74f1b88aa2d2040ac2631a420a5210, type: 3}
     <EnemiesSpawnPoints>k__BackingField:
     - {fileID: 1917600657}
@@ -8144,7 +8145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chooseFrame: {fileID: 737386623}
   _reloadBar: {fileID: 2045247221}
-  _weaponType: 1
+  <WeaponType>k__BackingField: 1
   _laserImages:
   - {fileID: 181293817}
   - {fileID: 629769014}
@@ -8805,7 +8806,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chooseFrame: {fileID: 2139423345}
   _reloadBar: {fileID: 197285696}
-  _weaponType: 0
+  <WeaponType>k__BackingField: 0
 --- !u!1 &2045247219
 GameObject:
   m_ObjectHideFlags: 0

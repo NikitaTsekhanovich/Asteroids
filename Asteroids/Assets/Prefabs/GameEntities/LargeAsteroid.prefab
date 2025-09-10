@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 8609523032543457971}
   - component: {fileID: 5670275081422915500}
-  - component: {fileID: 5224174898536399538}
+  - component: {fileID: 4813509014324473341}
   - component: {fileID: 8954001040927808597}
   - component: {fileID: 4874310931255994456}
   - component: {fileID: 7482699527259423714}
   - component: {fileID: 322955361117360095}
   m_Layer: 0
-  m_Name: Asteroid
+  m_Name: LargeAsteroid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5224174898536399538
+--- !u!114 &4813509014324473341
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,12 +98,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8205837501538203059}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eb7e95f40e6e3948a30827856f27a18, type: 3}
+  m_Script: {fileID: 11500000, guid: d1d50459d2d8fc140a34b6964445b1e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _damageTakerDetector: {fileID: 8954001040927808597}
   _encounterEntityDetector: {fileID: 4874310931255994456}
-  <GameEntityType>k__BackingField: 0
 --- !u!114 &8954001040927808597
 MonoBehaviour:
   m_ObjectHideFlags: 0

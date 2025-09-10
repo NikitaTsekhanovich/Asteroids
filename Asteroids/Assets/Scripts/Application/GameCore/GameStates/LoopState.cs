@@ -12,10 +12,10 @@ namespace Application.GameCore.GameStates
         public LoopState(
             LevelData levelData,
             IInput input,
-            AsteroidPoolFactory asteroidPoolFactory)
+            LargeAsteroidPoolFactory largeAsteroidPoolFactory)
         {
             _input = input;
-            _enemiesSpawner = new EnemiesSpawner(asteroidPoolFactory, levelData);
+            _enemiesSpawner = new EnemiesSpawner(largeAsteroidPoolFactory, levelData);
         }
         
         public void Enter()

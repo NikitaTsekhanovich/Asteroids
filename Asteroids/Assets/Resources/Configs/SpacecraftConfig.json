@@ -6,5 +6,6 @@
   "Acceleration": 6.0,
   "Decelerate": 1.0,
   "ForceInertia": 2.0,
-  "TimeInvulnerability": 3.0
+  "TimeInvulnerability": 3.0,
+  "GameEntityType": 1
 }

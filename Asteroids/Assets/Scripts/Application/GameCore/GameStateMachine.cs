@@ -6,6 +6,7 @@ using Application.GameHandlers;
 using Application.Inputs;
 using Domain;
 using Domain.Properties;
+using Zenject;
 
 namespace Application.GameCore
 {
@@ -26,11 +27,11 @@ namespace Application.GameCore
                     input,
                     scoreHandler,
                     spacecraft,
-                    out var asteroidPoolFactory),
+                    out var largeAsteroidPoolFactory),
                 [typeof(LoopState)] = new LoopState(
                     levelData, 
                     input,
-                    asteroidPoolFactory),
+                    largeAsteroidPoolFactory),
             };
             
             EnterIn<LoadState>();

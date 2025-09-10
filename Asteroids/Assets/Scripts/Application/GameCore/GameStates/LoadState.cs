@@ -1,4 +1,5 @@
 using Application.Configs;
+using Application.Configs.Enemies;
 using Application.Configs.WeaponsConfigs;
 using Application.GameEntities;
 using Application.GameEntitiesComponents.ShootSystem;
@@ -19,7 +20,7 @@ namespace Application.GameCore.GameStates
             IInput input,
             ScoreHandler scoreHandler,
             Spacecraft spacecraft,
-            out AsteroidPoolFactory asteroidPoolFactory)
+            out LargeAsteroidPoolFactory largeAsteroidPoolFactory)
         {
             _gameStateMachine = gameStateMachine;
 
@@ -28,8 +29,19 @@ namespace Application.GameCore.GameStates
             var projectileConfig = loadConfigSystem.GetConfig<ProjectileConfig>(ProjectileConfig.GuidProjectile);
             var bulletPoolFactory = new ProjectilePoolFactory(levelData.BulletPrefab, 10, projectileConfig);
             bulletPoolFactory.CreatePool();
+            
             var laserPoolFactory = new ProjectilePoolFactory(levelData.LaserPrefab, 5, projectileConfig);
             laserPoolFactory.CreatePool();
+            
+            var smallAsteroidConfig = loadConfigSystem.GetConfig<SmallAsteroidConfig>(SmallAsteroidConfig.GuidSmallAsteroid);
+            var smallAsteroidPoolFactory = new SmallAsteroidPoolFactory(
+                levelData.SmallAsteroidPrefab, 4, smallAsteroidConfig, scoreHandler);
+            smallAsteroidPoolFactory.CreatePool();
+            
+            var largeAsteroidConfig = loadConfigSystem.GetConfig<LargeAsteroidConfig>(LargeAsteroidConfig.GuidLargeAsteroid);
+            largeAsteroidPoolFactory = new LargeAsteroidPoolFactory(
+                levelData.LargeAsteroidPrefab, 4, largeAsteroidConfig, scoreHandler, smallAsteroidPoolFactory);
+            largeAsteroidPoolFactory.CreatePool();
             
             InitPlayer(
                 bulletPoolFactory,
@@ -37,10 +49,6 @@ namespace Application.GameCore.GameStates
                 input,
                 loadConfigSystem,
                 spacecraft);
-
-            var asteroidConfig = loadConfigSystem.GetConfig<AsteroidConfig>(AsteroidConfig.GuidAsteroid);
-            asteroidPoolFactory = new AsteroidPoolFactory(levelData.AsteroidPrefab, 4, asteroidConfig, scoreHandler);
-            asteroidPoolFactory.CreatePool();
         }
         
         public void Enter()

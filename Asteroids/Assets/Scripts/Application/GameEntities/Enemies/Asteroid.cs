@@ -1,4 +1,4 @@
-using Application.Configs;
+using Application.Configs.Enemies;
 using Application.GameEntitiesComponents;
 using Application.GameHandlers;
 using UnityEngine;
@@ -15,9 +15,9 @@ namespace Application.GameEntities.Enemies
             _linearMovement = new LinearMovement(Rigidbody, enemyConfig.Speed);
         }
         
-        public void SetVelocity(Vector2 movePoint)
+        public void SetMovePointVelocity(Vector2 movePoint)
         {
-            _linearMovement.SetVelocity(movePoint);
+            _linearMovement.SetMovePointVelocity(movePoint);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.IO;
 using Application.Configs;
+using Application.Configs.Enemies;
 using Application.Configs.WeaponsConfigs;
 using Cysharp.Threading.Tasks;
 using Unity.Plastic.Newtonsoft.Json;
@@ -12,7 +13,8 @@ namespace Editor
     {
         private const string PathConfigs = "/Resources/Configs/";
         private const string SpacecraftConfigName = "SpacecraftConfig";
-        private const string AsteroidConfigName = "AsteroidConfig";
+        private const string LargeAsteroidConfigName = "LargeAsteroidConfig";
+        private const string SmallAsteroidConfigName = "SmallAsteroidConfig";
         private const string ProjectileConfigName  = "ProjectileConfig";
         private const string BulletWeaponConfigName = "BulletWeaponConfig";
         private const string LaserWeaponConfigName = "LaserWeaponConfig";
@@ -25,7 +27,8 @@ namespace Editor
             _savePath = Path.Combine(UnityEngine.Application.dataPath);
             
             await CreateConfig<SpacecraftConfig>(SpacecraftConfigName);
-            await CreateConfig<AsteroidConfig>(AsteroidConfigName);
+            await CreateConfig<LargeAsteroidConfig>(LargeAsteroidConfigName);
+            await CreateConfig<SmallAsteroidConfig>(SmallAsteroidConfigName);
             await CreateConfig<ProjectileConfig>(ProjectileConfigName);
             await CreateConfig<BulletWeaponConfig>(BulletWeaponConfigName);
             await CreateConfig<LaserWeaponConfig>(LaserWeaponConfigName);

@@ -13,7 +13,8 @@ namespace Application.GameCore
         [field: SerializeField] public Laser LaserPrefab { get; private set; }
         
         [field: Header("Enemies data")]
-        [field: SerializeField] public Asteroid AsteroidPrefab { get; private set; }
+        [field: SerializeField] public LargeAsteroid LargeAsteroidPrefab { get; private set; }
+        [field: SerializeField] public SmallAsteroid SmallAsteroidPrefab { get; private set; }
         [field: SerializeField] public Ufo UfoPrefab { get; private set; }
         [field: SerializeField] public Transform[] EnemiesSpawnPoints { get; private set; }
         [field: SerializeField] public Transform[] EnemiesStartMovePoints { get; private set; }

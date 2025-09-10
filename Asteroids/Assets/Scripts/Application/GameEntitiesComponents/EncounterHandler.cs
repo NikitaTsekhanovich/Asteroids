@@ -11,10 +11,10 @@ namespace Application.GameEntitiesComponents
             _rigidbody = rigidbody;
         }
         
-        public void Encounter(Transform encounteredEntity)
+        public void Encounter(Transform encounteredEntity, float speed = 1f)
         {
             var directionBounce = _rigidbody.position - (Vector2)encounteredEntity.position;
-            _rigidbody.velocity = directionBounce;
+            _rigidbody.velocity = directionBounce.normalized * speed;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Application.GameCore
         
         [Inject] private ScoreHandler _scoreHandler;
         [Inject] private Spacecraft _spacecraft;
+        [Inject] private SignalBus _signalBus;
         
         private GameStateMachine _gameStateMachine;
         

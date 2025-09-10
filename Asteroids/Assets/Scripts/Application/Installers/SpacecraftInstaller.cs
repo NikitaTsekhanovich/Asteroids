@@ -11,6 +11,8 @@ namespace Application.Installers
         
         public override void InstallBindings()
         {
+            SignalBusInstaller.Install(Container);
+            
             var spawnPosition = new Vector3(
                 _playerSpawnPoint.position.x,
                 _playerSpawnPoint.position.y,
@@ -21,6 +23,7 @@ namespace Application.Installers
                 spawnPosition, 
                 _playerSpawnPoint.rotation);
             
+            Container.Inject(spacecraft);
             Container
                 .BindInstance(spacecraft)
                 .AsSingle()

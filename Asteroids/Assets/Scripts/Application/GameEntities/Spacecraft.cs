@@ -39,6 +39,7 @@ namespace Application.GameEntities
             BulletWeaponConfig bulletWeaponConfig,
             LaserWeaponConfig laserWeaponConfig)
         {
+            GameEntityType = spacecraftConfig.GameEntityType;
             _rigidbody = GetComponent<Rigidbody2D>();
             _input = input;
             _encounterEntityDetector.SetOwner(this);
@@ -62,7 +63,7 @@ namespace Application.GameEntities
             OnInitialized?.Invoke(this);
         }
 
-        [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
+        public GameEntityTypes GameEntityType { get; private set; }
         public Health Health { get; private set; }
         public WeaponInventory WeaponInventory { get; private set; }
         public bool IsCanEncounter => _spacecraftStateMachine.GetCurrentTypeState() != typeof(InvulnerabilityState);

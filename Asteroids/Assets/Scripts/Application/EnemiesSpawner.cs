@@ -6,7 +6,7 @@ namespace Application
 {
     public class EnemiesSpawner 
     {
-        private readonly AsteroidPoolFactory _asteroidPoolFactory;
+        private readonly LargeAsteroidPoolFactory _largeAsteroidPoolFactory;
         private readonly Transform[] _spawnPoints;
         private readonly Transform[] _startMovePoints;
         private readonly float _spawnInterval;
@@ -15,10 +15,10 @@ namespace Application
         private float _currentTimeSpawnAsteroid;
         
         public EnemiesSpawner(
-            AsteroidPoolFactory asteroidPoolFactory, 
+            LargeAsteroidPoolFactory largeAsteroidPoolFactory, 
             LevelData levelData)
         {
-            _asteroidPoolFactory = asteroidPoolFactory;
+            _largeAsteroidPoolFactory = largeAsteroidPoolFactory;
             _spawnPoints = levelData.EnemiesSpawnPoints;
             _startMovePoints = levelData.EnemiesStartMovePoints;
             _spawnInterval = 5f;
@@ -34,11 +34,11 @@ namespace Application
                 _currentTimeSpawnAsteroid = 0f;
                 
                 var randomSpawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
-                var asteroid = _asteroidPoolFactory.GetPoolEntity(
+                var asteroid = _largeAsteroidPoolFactory.GetPoolEntity(
                     randomSpawnPoint.position, randomSpawnPoint.rotation);
 
                 var randomMovePoint = _startMovePoints[Random.Range(0, _startMovePoints.Length)];
-                asteroid.SetVelocity(randomMovePoint.position);
+                asteroid.SetMovePointVelocity(randomMovePoint.position);
             }
         }
     }

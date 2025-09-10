@@ -13,7 +13,7 @@ namespace Application.GameEntitiesComponents
             _speed = speed;
         }
         
-        public void SetVelocity(Vector2 movePoint)
+        public void SetMovePointVelocity(Vector2 movePoint)
         {
             var direction = (movePoint - (Vector2)_rigidbody.transform.position).normalized * _speed;
             _rigidbody.velocity = direction;

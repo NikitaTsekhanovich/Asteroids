@@ -1,3 +1,4 @@
+using Application.GameEntities;
 using Unity.Plastic.Newtonsoft.Json;
 
 namespace Application.Configs
@@ -20,7 +21,8 @@ namespace Application.Configs
             float acceleration, 
             float decelerate, 
             float forceInertia,
-            float timeInvulnerability) : 
+            float timeInvulnerability,
+            GameEntityTypes gameEntityType) : 
             base(guid)
         {
             MaxHealth = maxHealth;
@@ -30,6 +32,7 @@ namespace Application.Configs
             Decelerate = decelerate;
             ForceInertia = forceInertia;
             TimeInvulnerability = timeInvulnerability;
+            GameEntityType = gameEntityType;
         }
         
         public int MaxHealth { get; private set; }
@@ -39,5 +42,6 @@ namespace Application.Configs
         public float Decelerate { get; private set; }
         public float ForceInertia { get; private set; }
         public float TimeInvulnerability { get; private set; }
+        public GameEntityTypes GameEntityType { get; private set; }
     }
 }

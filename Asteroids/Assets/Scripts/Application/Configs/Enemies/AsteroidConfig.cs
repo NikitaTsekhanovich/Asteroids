@@ -1,30 +1,27 @@
-using System;
-using Unity.Plastic.Newtonsoft.Json;
+using Application.GameEntities;
 
-namespace Application.Configs
+namespace Application.Configs.Enemies
 {
-    [Serializable]
     public class AsteroidConfig : EnemyConfig
     {
-        public const string GuidAsteroid = nameof(AsteroidConfig);
-
-        public AsteroidConfig() : base(GuidAsteroid)
+        public AsteroidConfig(string guid) : base(guid)
         {
             
         }
         
-        [JsonConstructor]
         public AsteroidConfig(
             string guid,
             int maxHealth,
             int damage,
             int scoreValue,
-            float speed) : 
+            float speed,
+            GameEntityTypes gameEntityType) : 
             base(guid,
                 maxHealth,
                 damage,
                 scoreValue,
-                speed)
+                speed,
+                gameEntityType)
         {
             
         }

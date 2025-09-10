@@ -1,0 +1,9 @@
+{
+  "SmallAsteroidsCount": 2,
+  "MaxHealth": 1,
+  "Damage": 1,
+  "ScoreValue": 2,
+  "Speed": 1.5,
+  "GameEntityType": 0,
+  "Guid": "LargeAsteroidConfig"
+}
