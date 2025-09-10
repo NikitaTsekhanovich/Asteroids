@@ -13,6 +13,7 @@ namespace Presentation.ViewModels
         
         public readonly ReactiveProperty<float> BulletWeaponReloadProgress = new();
         public readonly ReactiveProperty<float> LaserWeaponReloadProgress = new();
+        public readonly ReactiveProperty<(int index, float progress)> LasersProgress = new ();
         
         [Inject]
         private void Construct(Spacecraft spacecraft)
@@ -37,6 +38,7 @@ namespace Presentation.ViewModels
 
             _bulletWeapon.CurrentReloadDelay.Subscribe(OnChangedBulletWeaponReloadProgress);
             _laserWeapon.CurrentReloadDelay.Subscribe(OnChangedLaserWeaponReloadProgress);
+            _laserWeapon.LasersProgress.Subscribe(OnChangeStateLaser);
         }
 
         private void OnChangedBulletWeaponReloadProgress(float currentProgress)
@@ -47,6 +49,13 @@ namespace Presentation.ViewModels
         private void OnChangedLaserWeaponReloadProgress(float currentProgress)
         {
             LaserWeaponReloadProgress.Value = currentProgress / _laserWeapon.ReloadDelay;
+        }
+
+        private void OnChangeStateLaser((int, float) laserProgress)
+        {
+            LasersProgress.Value = (
+                laserProgress.Item1, 
+                laserProgress.Item2 / _laserWeapon.ReloadLaserDelay);
         }
     }
 }

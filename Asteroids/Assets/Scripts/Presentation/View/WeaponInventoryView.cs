@@ -8,7 +8,7 @@ namespace Presentation.View
     public class WeaponInventoryView : MonoBehaviour
     {
         [SerializeField] private SlotView _bulletWeaponSlotView;
-        [SerializeField] private SlotView _laserWeaponSlotView;
+        [SerializeField] private LaserSlotView _laserWeaponSlotView;
         
         private WeaponInventoryModelView _weaponInventoryModelView;
         
@@ -21,12 +21,16 @@ namespace Presentation.View
                 _bulletWeaponSlotView.UpdateReloadBar);
             _weaponInventoryModelView.LaserWeaponReloadProgress.Subscribe(
                 _laserWeaponSlotView.UpdateReloadBar);
+            _weaponInventoryModelView.LasersProgress
+                .Skip(1)
+                .Subscribe(_laserWeaponSlotView.UpdateProgressLaser);
         }
 
         private void OnDestroy()
         {
             _weaponInventoryModelView.BulletWeaponReloadProgress.Dispose();
             _weaponInventoryModelView.LaserWeaponReloadProgress.Dispose();
+            _weaponInventoryModelView.LasersProgress.Dispose();
         }
     }
 }

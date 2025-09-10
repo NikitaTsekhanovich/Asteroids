@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Application.GameEntities;
 using Application.PoolFactories;
+using UniRx;
 using UnityEngine;
 
 namespace Application.GameEntitiesComponents.ShootSystem.Weapons
@@ -9,12 +10,15 @@ namespace Application.GameEntitiesComponents.ShootSystem.Weapons
     {
         private const int MaximumNumberLasers = 3;
         
-        private readonly float _reloadLaserDelay;
         private readonly Queue<int> _lasersIndexes = new ();
-        private readonly Queue<int> _reloadableLasers = new ();
+        private readonly Queue<int> _reloadableIndexes = new ();
 
         private float _currentReloadLaserDelay;
+        private int _currentReloadableIndex;
         
+        public readonly ReactiveProperty<(int index, float progress)> LasersProgress = new ();
+        public readonly float ReloadLaserDelay;
+
         public LaserWeapon(
             Transform shootPoint, 
             PoolFactory<Projectile> projectilePool, 
@@ -28,7 +32,7 @@ namespace Application.GameEntitiesComponents.ShootSystem.Weapons
                 reloadDelay,
                 weaponType)
         {
-            _reloadLaserDelay = reloadLaserDelay;
+            ReloadLaserDelay = reloadLaserDelay;
             
             for (var i = 0; i < MaximumNumberLasers; i++)
                 _lasersIndexes.Enqueue(i);
@@ -45,7 +49,8 @@ namespace Application.GameEntitiesComponents.ShootSystem.Weapons
             if (_lasersIndexes.Count > 0 && base.TryShoot())
             {
                 var index = _lasersIndexes.Dequeue();
-                _reloadableLasers.Enqueue(index);
+                LasersProgress.Value = (index, 0f);
+                _reloadableIndexes.Enqueue(index);
 
                 return true;
             }
@@ -57,13 +62,21 @@ namespace Application.GameEntitiesComponents.ShootSystem.Weapons
         {
             if (_lasersIndexes.Count < MaximumNumberLasers)
             {
-                _currentReloadLaserDelay += Time.deltaTime;
-
-                if (_currentReloadLaserDelay >= _reloadLaserDelay)
+                if (_currentReloadLaserDelay == 0f)
                 {
+                    var index = _reloadableIndexes.Dequeue();
+                    _currentReloadableIndex = index;
+                    LasersProgress.Value = (_currentReloadableIndex, _currentReloadLaserDelay);
+                }
+                
+                _currentReloadLaserDelay += Time.deltaTime;
+                LasersProgress.Value = (_currentReloadableIndex, _currentReloadLaserDelay);
+
+                if (_currentReloadLaserDelay >= ReloadLaserDelay)
+                {
+                    LasersProgress.Value = (_currentReloadableIndex, ReloadLaserDelay);
                     _currentReloadLaserDelay = 0f;
-                    var index = _reloadableLasers.Dequeue();
-                    _lasersIndexes.Enqueue(index);
+                    _lasersIndexes.Enqueue(_currentReloadableIndex);
                 }
             }
         }
