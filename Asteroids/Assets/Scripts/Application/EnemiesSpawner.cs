@@ -12,7 +12,7 @@ namespace Application
         private readonly float _spawnInterval;
         private readonly float _spawnFirstUfoDelay;
         
-        private float _currentTime;
+        private float _currentTimeSpawnAsteroid;
         
         public EnemiesSpawner(
             AsteroidPoolFactory asteroidPoolFactory, 
@@ -27,11 +27,11 @@ namespace Application
 
         public void Spawn()
         {
-            _currentTime += Time.deltaTime;
+            _currentTimeSpawnAsteroid += Time.deltaTime;
 
-            if (_currentTime >= _spawnInterval)
+            if (_currentTimeSpawnAsteroid >= _spawnInterval)
             {
-                _currentTime = 0f;
+                _currentTimeSpawnAsteroid = 0f;
                 
                 var randomSpawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
                 var asteroid = _asteroidPoolFactory.GetPoolEntity(

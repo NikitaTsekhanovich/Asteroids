@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Presentation.View
 {
-    public class LaserSlotView : SlotView
+    public class LaserWeaponSlotView : WeaponSlotView
     {
         [SerializeField] private Image[] _laserImages;
 

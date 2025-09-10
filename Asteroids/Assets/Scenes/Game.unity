@@ -8065,7 +8065,7 @@ GameObject:
   - component: {fileID: 1654670408}
   - component: {fileID: 1654670410}
   m_Layer: 0
-  m_Name: 1_Slot
+  m_Name: LaserWeaponSlotView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8144,6 +8144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chooseFrame: {fileID: 737386623}
   _reloadBar: {fileID: 2045247221}
+  _weaponType: 1
   _laserImages:
   - {fileID: 181293817}
   - {fileID: 629769014}
@@ -8725,7 +8726,7 @@ GameObject:
   - component: {fileID: 2005421156}
   - component: {fileID: 2005421158}
   m_Layer: 0
-  m_Name: 0_Slot
+  m_Name: BulletWeaponSlotView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8804,6 +8805,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chooseFrame: {fileID: 2139423345}
   _reloadBar: {fileID: 197285696}
+  _weaponType: 0
 --- !u!1 &2045247219
 GameObject:
   m_ObjectHideFlags: 0
