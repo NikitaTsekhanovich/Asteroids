@@ -1,22 +1,27 @@
-using System;
+using Unity.Plastic.Newtonsoft.Json;
 
 namespace Application.Configs
 {
-    [Serializable]
     public class SpacecraftConfig : Config
     {
-        public const string Guid = nameof(SpacecraftConfig);
+        public const string GuidSpacecraft = nameof(SpacecraftConfig);
         
+        public SpacecraftConfig() : base(GuidSpacecraft)
+        {
+            
+        }
+
+        [JsonConstructor]
         public SpacecraftConfig(
-            int maxHealth = 0, 
-            float rotationSpeed = 0,
-            float maxSpeed = 0, 
-            float acceleration = 0, 
-            float decelerate = 0,
-            float forceInertia = 0,
-            float timeInvulnerability = 0,
-            float weaponReloadTime = 0) : 
-            base(Guid)
+            string guid, 
+            int maxHealth, 
+            float rotationSpeed,
+            float maxSpeed,
+            float acceleration, 
+            float decelerate, 
+            float forceInertia,
+            float timeInvulnerability) : 
+            base(guid)
         {
             MaxHealth = maxHealth;
             RotationSpeed = rotationSpeed;
@@ -25,7 +30,6 @@ namespace Application.Configs
             Decelerate = decelerate;
             ForceInertia = forceInertia;
             TimeInvulnerability = timeInvulnerability;
-            WeaponReloadTime = weaponReloadTime;
         }
         
         public int MaxHealth { get; private set; }
@@ -35,6 +39,5 @@ namespace Application.Configs
         public float Decelerate { get; private set; }
         public float ForceInertia { get; private set; }
         public float TimeInvulnerability { get; private set; }
-        public float WeaponReloadTime { get; private set; }
     }
 }

@@ -1,6 +1,6 @@
 using Application.GameEntities.Properties;
 
-namespace Application.ShootSystem.Projectiles
+namespace Application.GameEntitiesComponents.ShootSystem.Projectiles
 {
     public class Bullet : Projectile
     {

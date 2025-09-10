@@ -1,5 +1,5 @@
 using System;
-using Application.ShootSystem;
+using Application.GameEntitiesComponents.ShootSystem.Weapons;
 using UnityEngine;
 using UniRx;
 
@@ -8,7 +8,7 @@ namespace Application.Inputs
     public class PCInput : IInput
     {
         public event Action OnShoot;
-        public event Action<ProjectileTypes> OnChooseProjectile;
+        public event Action<WeaponTypes> OnChooseWeapon;
         public ReactiveProperty<Vector2> MoveInput { get; } = new (Vector2.zero);
         
         public void ReadInput()
@@ -22,12 +22,12 @@ namespace Application.Inputs
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                OnChooseProjectile.Invoke(ProjectileTypes.Bullet);
+                OnChooseWeapon.Invoke(WeaponTypes.BulletWeapon);
             }
             
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                OnChooseProjectile.Invoke(ProjectileTypes.Laser);
+                OnChooseWeapon.Invoke(WeaponTypes.LaserWeapon);
             }
         }
 

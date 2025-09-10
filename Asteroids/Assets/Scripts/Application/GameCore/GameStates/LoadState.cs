@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using Application.Configs;
+using Application.Configs.WeaponsConfigs;
 using Application.GameEntities;
+using Application.GameEntitiesComponents.ShootSystem;
 using Application.GameHandlers;
 using Application.Inputs;
 using Application.PoolFactories;
-using Application.ShootSystem;
 using Domain.Properties;
-using UnityEngine;
 
 namespace Application.GameCore.GameStates
 {
@@ -26,21 +25,20 @@ namespace Application.GameCore.GameStates
 
             var loadConfigSystem = new LoadConfigSystem();
 
-            var projectileConfig = loadConfigSystem.GetConfig<ProjectileConfig>(ProjectileConfig.Guid);
+            var projectileConfig = loadConfigSystem.GetConfig<ProjectileConfig>(ProjectileConfig.GuidProjectile);
             var bulletPoolFactory = new ProjectilePoolFactory(levelData.BulletPrefab, 10, projectileConfig);
             bulletPoolFactory.CreatePool();
             var laserPoolFactory = new ProjectilePoolFactory(levelData.LaserPrefab, 5, projectileConfig);
             laserPoolFactory.CreatePool();
             
             InitPlayer(
-                levelData,
                 bulletPoolFactory,
                 laserPoolFactory,
                 input,
                 loadConfigSystem,
                 spacecraft);
 
-            var asteroidConfig = loadConfigSystem.GetConfig<AsteroidConfig>(AsteroidConfig.Guid);
+            var asteroidConfig = loadConfigSystem.GetConfig<AsteroidConfig>(AsteroidConfig.GuidAsteroid);
             asteroidPoolFactory = new AsteroidPoolFactory(levelData.AsteroidPrefab, 4, asteroidConfig, scoreHandler);
             asteroidPoolFactory.CreatePool();
         }
@@ -56,21 +54,23 @@ namespace Application.GameCore.GameStates
         }
 
         private void InitPlayer(
-            LevelData levelData,
             PoolFactory<Projectile> bulletPoolFactory,
             PoolFactory<Projectile> laserPoolFactory,
             IInput input,
             LoadConfigSystem loadConfigSystem,
             Spacecraft spacecraft)
         {
-            var projectilePools = new Dictionary<ProjectileTypes, PoolFactory<Projectile>>
-            {
-                [levelData.BulletPrefab.ProjectileType] = bulletPoolFactory,
-                [levelData.LaserPrefab.ProjectileType] = laserPoolFactory,
-            };
-
-            var spacecraftConfig = loadConfigSystem.GetConfig<SpacecraftConfig>(SpacecraftConfig.Guid);
-            spacecraft.Construct(input, projectilePools, spacecraftConfig);
+            var spacecraftConfig = loadConfigSystem.GetConfig<SpacecraftConfig>(SpacecraftConfig.GuidSpacecraft);
+            var bulletWeaponConfig = loadConfigSystem.GetConfig<BulletWeaponConfig>(BulletWeaponConfig.GuidBulletWeapon);
+            var laserWeaponConfig = loadConfigSystem.GetConfig<LaserWeaponConfig>(LaserWeaponConfig.GuidLaserWeapon);
+            
+            spacecraft.Construct(
+                input, 
+                bulletPoolFactory, 
+                laserPoolFactory, 
+                spacecraftConfig,
+                bulletWeaponConfig,
+                laserWeaponConfig);
         }
     }
 }

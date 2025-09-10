@@ -1,10 +1,9 @@
 using Application.Configs;
 using Application.GameEntities;
 using Application.GameEntities.Properties;
-using Application.GameEntitiesComponents;
 using UnityEngine;
 
-namespace Application.ShootSystem
+namespace Application.GameEntitiesComponents.ShootSystem
 {
     public class Projectile : PoolEntity
     {
@@ -22,8 +21,6 @@ namespace Application.ShootSystem
             _damage = projectileConfig.Damage;
             _damageTakerDetector.OnDamageTakerDetected += DealDamage;
         }
-        
-        [field: SerializeField] public ProjectileTypes ProjectileType { get; private set; }
         
         private void Update()
         {

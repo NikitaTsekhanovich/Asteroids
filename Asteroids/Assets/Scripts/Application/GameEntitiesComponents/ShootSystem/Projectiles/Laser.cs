@@ -1,11 +1,13 @@
 using Application.Configs;
 using UnityEngine;
 
-namespace Application.ShootSystem.Projectiles
+namespace Application.GameEntitiesComponents.ShootSystem.Projectiles
 {
     public class Laser : Projectile
     {
         [SerializeField] private ParticleSystem _laserEffect;
+
+        private const float OffsetRotationEffect = 270f;
         
         private ParticleSystem.MainModule _mainModuleLaserEffect;
 
@@ -21,7 +23,7 @@ namespace Application.ShootSystem.Projectiles
         {
             base.ActiveInit(startPosition, startRotation);
             
-            var rotationZ = 270f - startRotation.eulerAngles.z;
+            var rotationZ = OffsetRotationEffect - startRotation.eulerAngles.z;
             _mainModuleLaserEffect.startRotation = new ParticleSystem.MinMaxCurve(rotationZ * Mathf.Deg2Rad);
         }
     }

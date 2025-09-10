@@ -1,16 +1,25 @@
+using Unity.Plastic.Newtonsoft.Json;
+
 namespace Application.Configs
 {
     public class ProjectileConfig : Config
     {
-        public const string Guid = nameof(ProjectileConfig);
+        public const string GuidProjectile = nameof(ProjectileConfig);
         
-        public ProjectileConfig(
-            float lifetime = 0,
-            float speed = 0,
-            int damage = 0) : 
-            base(Guid)
+        public ProjectileConfig() : base(GuidProjectile)
         {
-            LifeTime = lifetime;
+            
+        }
+        
+        [JsonConstructor]
+        public ProjectileConfig(
+            string guid,
+            float lifeTime,
+            float speed,
+            int damage) : 
+            base(guid)
+        {
+            LifeTime = lifeTime;
             Speed = speed;
             Damage = damage;
         }

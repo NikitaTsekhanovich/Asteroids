@@ -2,10 +2,15 @@ namespace Application.Configs
 {
     public class EnemyConfig : Config
     {
+        public EnemyConfig(string guid) : base(guid)
+        {
+            
+        }
+
         public EnemyConfig(
             string guid,
-            int maxHealth, 
-            int damage, 
+            int maxHealth,
+            int damage,
             int scoreValue,
             float speed) : 
             base(guid)

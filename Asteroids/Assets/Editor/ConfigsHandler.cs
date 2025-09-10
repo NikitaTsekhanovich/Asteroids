@@ -1,5 +1,6 @@
 using System.IO;
 using Application.Configs;
+using Application.Configs.WeaponsConfigs;
 using Cysharp.Threading.Tasks;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
@@ -12,7 +13,9 @@ namespace Editor
         private const string PathConfigs = "/Resources/Configs/";
         private const string SpacecraftConfigName = "SpacecraftConfig";
         private const string AsteroidConfigName = "AsteroidConfig";
-        private const string ProjectileConfig  = "ProjectileConfig";
+        private const string ProjectileConfigName  = "ProjectileConfig";
+        private const string BulletWeaponConfigName = "BulletWeaponConfig";
+        private const string LaserWeaponConfigName = "LaserWeaponConfig";
         
         private static string _savePath;
         
@@ -21,31 +24,22 @@ namespace Editor
         {
             _savePath = Path.Combine(UnityEngine.Application.dataPath);
             
-            await CreteSpacecraftConfig();
-            await CreateAsteroidConfig();
-            await CreateProjectileConfig();
+            await CreateConfig<SpacecraftConfig>(SpacecraftConfigName);
+            await CreateConfig<AsteroidConfig>(AsteroidConfigName);
+            await CreateConfig<ProjectileConfig>(ProjectileConfigName);
+            await CreateConfig<BulletWeaponConfig>(BulletWeaponConfigName);
+            await CreateConfig<LaserWeaponConfig>(LaserWeaponConfigName);
             
             EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();
             Debug.Log($"Configs created: {_savePath}{PathConfigs}");
         }
-
-        private static async UniTask CreteSpacecraftConfig()
-        {
-            var spacecraftConfig = new SpacecraftConfig();
-            await CreateJsonConfig(spacecraftConfig, SpacecraftConfigName);
-        }
-
-        private static async UniTask CreateAsteroidConfig()
-        {
-            var asteroidConfig = new AsteroidConfig();
-            await CreateJsonConfig(asteroidConfig, AsteroidConfigName);
-        }
         
-        private static async UniTask CreateProjectileConfig()
+        private static async UniTask CreateConfig<T>(string configName)
+            where T : Config, new ()
         {
-            var projectileConfig = new ProjectileConfig();
-            await CreateJsonConfig(projectileConfig, ProjectileConfig);
+            var newConfig = new T();
+            await CreateJsonConfig(newConfig, configName);
         }
 
         private static async UniTask CreateJsonConfig<TConfig>(TConfig config, string nameConfig)

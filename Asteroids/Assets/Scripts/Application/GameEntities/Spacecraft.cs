@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Application.Configs;
+using Application.Configs.WeaponsConfigs;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
+using Application.GameEntitiesComponents.ShootSystem;
+using Application.GameEntitiesComponents.ShootSystem.Weapons;
 using Application.GameEntitiesComponents.Spacecraft;
 using Application.GameEntitiesComponents.Spacecraft.States;
 using Application.Inputs;
 using Application.PoolFactories;
-using Application.ShootSystem;
 using UniRx;
 using UnityEngine;
 
@@ -24,7 +26,6 @@ namespace Application.GameEntities
         private SpacecraftStateMachine _spacecraftStateMachine;
         private IInput _input;
         private EncounterHandler _encounterHandler;
-        private Weapon _weapon;
         
         public readonly ReactiveProperty<Vector2> Position = new ();
         public readonly ReactiveProperty<Quaternion> Rotation = new ();
@@ -32,8 +33,11 @@ namespace Application.GameEntities
         
         public void Construct(
             IInput input,
-            Dictionary<ProjectileTypes, PoolFactory<Projectile>> projectilePools,
-            SpacecraftConfig spacecraftConfig)
+            PoolFactory<Projectile> bulletPoolFactory,
+            PoolFactory<Projectile> laserPoolFactory,
+            SpacecraftConfig spacecraftConfig,
+            BulletWeaponConfig bulletWeaponConfig,
+            LaserWeaponConfig laserWeaponConfig)
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _input = input;
@@ -47,9 +51,12 @@ namespace Application.GameEntities
             
             _encounterHandler = new EncounterHandler(_rigidbody);
             Health = new Health(spacecraftConfig.MaxHealth);
-            _weapon = new Weapon(_shootPoint, projectilePools, GameEntityType, spacecraftConfig.WeaponReloadTime);
-            _weapon.ChooseProjectile(ProjectileTypes.Bullet);
-            
+            CreateWeaponInventory(
+                bulletPoolFactory, 
+                laserPoolFactory,
+                bulletWeaponConfig,
+                laserWeaponConfig);
+
             Subscribe();
             
             OnInitialized?.Invoke(this);
@@ -57,6 +64,7 @@ namespace Application.GameEntities
 
         [field: SerializeField] public GameEntityTypes GameEntityType { get; private set; }
         public Health Health { get; private set; }
+        public WeaponInventory WeaponInventory { get; private set; }
         public bool IsCanEncounter => _spacecraftStateMachine.GetCurrentTypeState() != typeof(InvulnerabilityState);
         public Transform Transform => transform;
         public event Action<Spacecraft> OnInitialized;
@@ -67,7 +75,7 @@ namespace Application.GameEntities
             Rotation.Value = transform.rotation;
             CurrentSpeed.Value = _rigidbody.velocity.magnitude;
             
-            _weapon.Reload();
+            WeaponInventory.ReloadWeapons();
             
             _spacecraftStateMachine?.UpdateSystem();
         }
@@ -99,7 +107,7 @@ namespace Application.GameEntities
         private void Subscribe()
         {
             _input.OnShoot += Shoot;
-            _input.OnChooseProjectile += ChooseProjectile;
+            _input.OnChooseWeapon += ChooseWeapon;
             Health.OnDied += Die;
             _encounterEntityDetector.OnEncounter += Encounter;
         }
@@ -107,21 +115,51 @@ namespace Application.GameEntities
         private void Unsubscribe()
         {
             _input.OnShoot -= Shoot;
-            _input.OnChooseProjectile -= ChooseProjectile;
+            _input.OnChooseWeapon -= ChooseWeapon;
             Health.OnDied -= Die;
             _encounterEntityDetector.OnEncounter -= Encounter;
+        }
+        
+        private void CreateWeaponInventory(
+            PoolFactory<Projectile> bulletPoolFactory, 
+            PoolFactory<Projectile> laserPoolFactory,
+            BulletWeaponConfig bulletWeaponConfig,
+            LaserWeaponConfig laserWeaponConfig)
+        {
+            var bulletWeapon = new BulletWeapon(
+                _shootPoint, 
+                bulletPoolFactory, 
+                GameEntityType, 
+                bulletWeaponConfig.ReloadDelay,
+                bulletWeaponConfig.WeaponType);
+            var laserWeapon = new LaserWeapon(
+                _shootPoint, 
+                laserPoolFactory, 
+                GameEntityType, 
+                laserWeaponConfig.ReloadDelay,
+                laserWeaponConfig.ReloadLaserDelay,
+                laserWeaponConfig.WeaponType);
+            
+            var weapons = new Dictionary<WeaponTypes, Weapon>
+            {
+                [bulletWeapon.WeaponType] = bulletWeapon,
+                [laserWeapon.WeaponType] = laserWeapon
+            };
+            
+            WeaponInventory = new WeaponInventory(weapons);
+            WeaponInventory.ChooseWeapon(WeaponTypes.BulletWeapon);
         }
 
         private void Shoot()
         {
             if (!IsCanEncounter) return;
             
-            _weapon.Shoot();
+            WeaponInventory.Shoot();
         }
 
-        private void ChooseProjectile(ProjectileTypes projectileType)
+        private void ChooseWeapon(WeaponTypes weaponType)
         {
-            _weapon.ChooseProjectile(projectileType);
+            WeaponInventory.ChooseWeapon(weaponType);
         }
 
         private void Die()

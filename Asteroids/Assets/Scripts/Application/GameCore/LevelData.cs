@@ -1,6 +1,6 @@
 using System;
 using Application.GameEntities.Enemies;
-using Application.ShootSystem.Projectiles;
+using Application.GameEntitiesComponents.ShootSystem.Projectiles;
 using UnityEngine;
 
 namespace Application.GameCore

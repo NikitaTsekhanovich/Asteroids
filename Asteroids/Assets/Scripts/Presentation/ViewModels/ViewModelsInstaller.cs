@@ -20,6 +20,11 @@ namespace Presentation.ViewModels
                 .BindInterfacesAndSelfTo<SpacecraftInfoViewModel>()
                 .AsSingle()
                 .NonLazy();
+            
+            Container
+                .BindInterfacesAndSelfTo<WeaponInventoryModelView>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

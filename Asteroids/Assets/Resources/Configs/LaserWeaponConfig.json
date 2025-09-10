@@ -1,0 +1,6 @@
+{
+  "ReloadLaserDelay": 5.0,
+  "ReloadDelay": 2.0,
+  "WeaponType": 1,
+  "Guid": "LaserWeaponConfig"
+}

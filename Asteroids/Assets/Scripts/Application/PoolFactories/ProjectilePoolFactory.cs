@@ -1,5 +1,5 @@
 using Application.Configs;
-using Application.ShootSystem;
+using Application.GameEntitiesComponents.ShootSystem;
 
 namespace Application.PoolFactories
 {
