@@ -31,10 +31,10 @@ namespace Application.GameEntitiesComponents
             _forceInertia = forceInertia;
         }
 
-        public void Move(Vector2 velocity)
+        public void Move(Vector2 input)
         {
-            Rotate(velocity.x);
-            _rigidbody.velocity = GetMoveDirection() * GetCurrentSpeed(velocity.y);
+            Rotate(input.x);
+            _rigidbody.velocity = GetMoveDirection() * GetCurrentSpeed(input.y);
         }
 
         public void SetSpeed(float speed)

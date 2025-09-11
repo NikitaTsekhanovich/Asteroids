@@ -2,15 +2,19 @@ using Application.Configs.Enemies;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
 using Application.GameHandlers;
+using Application.PoolFactories;
 using UnityEngine;
+using Zenject;
 
 namespace Application.GameEntities
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Enemy : PoolEntity, ICanTakeDamage, ICanEncounter
+    public abstract class Enemy : PoolEntity, ICanTakeDamage, ICanEncounter
     {
         [SerializeField] private DamageTakerDetector _damageTakerDetector;
         [SerializeField] private EncounterEntityDetector _encounterEntityDetector;
+        
+        [Inject] private PoolFactory<ExplosionEffect> _explosionEffectPoolFactory;
         
         private Health _health;
         private EncounterHandler _encounterHandler;
@@ -39,7 +43,17 @@ namespace Application.GameEntities
         public GameEntityTypes GameEntityType { get; private set; }
         public Transform Transform => transform;
         public bool IsCanEncounter => true;
-        
+
+        private void Update()
+        {
+            UpdateSystems();
+        }
+
+        private void FixedUpdate()
+        {
+            FixedUpdateSystems();
+        }
+
         private void OnDestroy()
         {
             _health.OnDied -= Die;
@@ -56,9 +70,22 @@ namespace Application.GameEntities
         {
             _health.TakeDamage(damage);
         }
+
+        protected virtual void UpdateSystems()
+        {
+            
+        }
+
+        protected virtual void FixedUpdateSystems()
+        {
+            
+        }
         
         protected virtual void Die()
         {
+            _explosionEffectPoolFactory.GetPoolEntity(
+                transform.position, Quaternion.identity);
+            
             ReturnToPool();
             _scoreHandler.ChangeScore(_scoreValue);
             _health.ResetHealth();

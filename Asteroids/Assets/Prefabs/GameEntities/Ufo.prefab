@@ -32,9 +32,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.4373364, y: -0.21331158, z: 0.045484107}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 458309282808641524}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8728014386136242675
@@ -103,7 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageTakerDetector: {fileID: -6275921232043755564}
   _encounterEntityDetector: {fileID: 7508633925323729265}
-  <GameEntityType>k__BackingField: 0
+  _shootPoint: {fileID: 458309282808641524}
 --- !u!114 &7508633925323729265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,3 +191,34 @@ CircleCollider2D:
   m_Offset: {x: -0.035300612, y: 0}
   serializedVersion: 2
   m_Radius: 1.6578964
+--- !u!1 &4945274518297666489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 458309282808641524}
+  m_Layer: 0
+  m_Name: ShootPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &458309282808641524
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4945274518297666489}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.74, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8190042916778409049}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

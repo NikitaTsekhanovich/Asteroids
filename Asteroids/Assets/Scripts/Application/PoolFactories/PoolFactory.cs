@@ -24,13 +24,13 @@ namespace Application.PoolFactories
         
         protected virtual T Preload()
         {
-            var newEntity = Object.Instantiate(_entity, Vector3.zero, Quaternion.identity);
+            var newEntity = Object.Instantiate(_entity, Vector2.zero, Quaternion.identity);
             newEntity.SpawnInit(ReturnEntity);
             
             return newEntity;
         }
         
-        public virtual T GetPoolEntity(Vector3 positionAppearance, Quaternion rotationAppearance)
+        public virtual T GetPoolEntity(Vector2 positionAppearance, Quaternion rotationAppearance)
         {
             var newEntity = _entitiesPool.Get();
             newEntity.ActiveInit(positionAppearance, rotationAppearance);

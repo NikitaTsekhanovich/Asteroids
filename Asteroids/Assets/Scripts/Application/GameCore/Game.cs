@@ -12,6 +12,7 @@ namespace Application.GameCore
         [Inject] private ScoreHandler _scoreHandler;
         [Inject] private Spacecraft _spacecraft;
         [Inject] private SignalBus _signalBus;
+        [Inject] private DiContainer _container;
         
         private GameStateMachine _gameStateMachine;
         
@@ -20,7 +21,8 @@ namespace Application.GameCore
             _gameStateMachine = new GameStateMachine(
                 _levelData, 
                 _scoreHandler,
-                _spacecraft);
+                _spacecraft,
+                _container);
         }
 
         private void Update()

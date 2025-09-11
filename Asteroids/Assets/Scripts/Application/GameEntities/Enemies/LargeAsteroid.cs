@@ -2,11 +2,14 @@ using Application.Configs.Enemies;
 using Application.GameHandlers;
 using Application.PoolFactories;
 using UnityEngine;
+using Zenject;
 
 namespace Application.GameEntities.Enemies
 {
     public class LargeAsteroid : Asteroid
     {
+        [Inject] private GameField _gameField;
+        
         private SmallAsteroidPoolFactory _smallAsteroidPoolFactory;
         private int _smallAsteroidsCount;
 
@@ -36,8 +39,8 @@ namespace Application.GameEntities.Enemies
                 var smallAsteroid = _smallAsteroidPoolFactory.GetPoolEntity(transform.position, Quaternion.identity);
                 
                 var randomDirection = new Vector2(
-                    Random.Range(-4f, 4f),
-                    Random.Range(-4f, 4f)
+                    Random.Range(-_gameField.BoundX, _gameField.BoundX),
+                    Random.Range(-_gameField.BoundY, _gameField.BoundY)
                 );
     
                 smallAsteroid.SetMovePointVelocity(randomDirection);

@@ -1,0 +1,12 @@
+{
+  "RotationSpeed": 80.0,
+  "MaxSpeed": 4.0,
+  "Acceleration": 1.0,
+  "Decelerate": 2.0,
+  "ForceInertia": 3.0,
+  "MaxHealth": 1,
+  "Damage": 1,
+  "ScoreValue": 3,
+  "GameEntityType": 0,
+  "Guid": "UfoConfig"
+}

@@ -15,7 +15,8 @@ namespace Application.GameCore
         public GameStateMachine(
             LevelData levelData, 
             ScoreHandler scoreHandler,
-            Spacecraft spacecraft)
+            Spacecraft spacecraft,
+            DiContainer container)
         {
             var input = new PCInput();
             
@@ -27,11 +28,14 @@ namespace Application.GameCore
                     input,
                     scoreHandler,
                     spacecraft,
-                    out var largeAsteroidPoolFactory),
+                    container,
+                    out var largeAsteroidPoolFactory,
+                    out var ufoPoolFactory),
                 [typeof(LoopState)] = new LoopState(
                     levelData, 
                     input,
-                    largeAsteroidPoolFactory),
+                    largeAsteroidPoolFactory,
+                    ufoPoolFactory),
             };
             
             EnterIn<LoadState>();

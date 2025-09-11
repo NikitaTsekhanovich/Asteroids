@@ -5,29 +5,36 @@ namespace Application
     public class GameField : MonoBehaviour
     {
         [SerializeField] private BoxCollider2D _boxCollider2D;
-        [SerializeField] private RectTransform _rectBackground;
-        [SerializeField] private Canvas _gameCanvas;
         
         private const float BoundRange = -0.3f;
 
-        private float _boundX;
-        private float _boundY;
-
-        private void Start()
+        public void Init(
+            RectTransform rectBackground,
+            Canvas gameCanvas)
         {
-            InitSizeField();
+            _boxCollider2D.offset = Vector2.zero;
+            
+            _boxCollider2D.size = new Vector2(
+                rectBackground.rect.size.x * gameCanvas.transform.localScale.x,
+                rectBackground.rect.size.y * gameCanvas.transform.localScale.y);
+            
+            BoundX = _boxCollider2D.size.x / 2;
+            BoundY = _boxCollider2D.size.y / 2;
         }
+        
+        public float BoundX { get; private set; }
+        public float BoundY { get; private set; }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
             var objectTransform = collision.transform;
 
-            if (Mathf.Abs(objectTransform.position.y) - _boundY >= BoundRange &&
-                Mathf.Abs(objectTransform.position.x) - _boundX >= BoundRange)
+            if (Mathf.Abs(objectTransform.position.y) - BoundY >= BoundRange &&
+                Mathf.Abs(objectTransform.position.x) - BoundX >= BoundRange)
             {
                 objectTransform.position *= -1;
             }
-            else if (Mathf.Abs(objectTransform.position.y) >= _boundY)
+            else if (Mathf.Abs(objectTransform.position.y) >= BoundY)
             {
                 objectTransform.position = 
                     new Vector3(objectTransform.position.x, -objectTransform.position.y, 0f);
@@ -37,18 +44,6 @@ namespace Application
                 objectTransform.position = 
                     new Vector3(-objectTransform.position.x, objectTransform.position.y, 0f);
             }
-        }
-
-        private void InitSizeField()
-        {
-            _boxCollider2D.offset = Vector2.zero;
-            
-            _boxCollider2D.size = new Vector2(
-                _rectBackground.rect.size.x * _gameCanvas.transform.localScale.x,
-                _rectBackground.rect.size.y * _gameCanvas.transform.localScale.y);
-            
-            _boundX = _boxCollider2D.size.x / 2;
-            _boundY = _boxCollider2D.size.y / 2;
         }
     }
 }

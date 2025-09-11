@@ -12,12 +12,6 @@ namespace Editor
     public static class ConfigsHandler 
     {
         private const string PathConfigs = "/Resources/Configs/";
-        private const string SpacecraftConfigName = "SpacecraftConfig";
-        private const string LargeAsteroidConfigName = "LargeAsteroidConfig";
-        private const string SmallAsteroidConfigName = "SmallAsteroidConfig";
-        private const string ProjectileConfigName  = "ProjectileConfig";
-        private const string BulletWeaponConfigName = "BulletWeaponConfig";
-        private const string LaserWeaponConfigName = "LaserWeaponConfig";
         
         private static string _savePath;
         
@@ -26,12 +20,13 @@ namespace Editor
         {
             _savePath = Path.Combine(UnityEngine.Application.dataPath);
             
-            await CreateConfig<SpacecraftConfig>(SpacecraftConfigName);
-            await CreateConfig<LargeAsteroidConfig>(LargeAsteroidConfigName);
-            await CreateConfig<SmallAsteroidConfig>(SmallAsteroidConfigName);
-            await CreateConfig<ProjectileConfig>(ProjectileConfigName);
-            await CreateConfig<BulletWeaponConfig>(BulletWeaponConfigName);
-            await CreateConfig<LaserWeaponConfig>(LaserWeaponConfigName);
+            await CreateConfig<SpacecraftConfig>(SpacecraftConfig.GuidSpacecraft);
+            await CreateConfig<LargeAsteroidConfig>(LargeAsteroidConfig.GuidLargeAsteroid);
+            await CreateConfig<SmallAsteroidConfig>(SmallAsteroidConfig.GuidSmallAsteroid);
+            await CreateConfig<UfoConfig>(UfoConfig.GuidUfo);
+            await CreateConfig<ProjectileConfig>(ProjectileConfig.GuidProjectile);
+            await CreateConfig<BulletWeaponConfig>(BulletWeaponConfig.GuidBulletWeapon);
+            await CreateConfig<LaserWeaponConfig>(LaserWeaponConfig.GuidLaserWeapon);
             
             EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();

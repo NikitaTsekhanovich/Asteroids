@@ -7,6 +7,8 @@ using Application.GameHandlers;
 using Application.Inputs;
 using Application.PoolFactories;
 using Domain.Properties;
+using UnityEngine;
+using Zenject;
 
 namespace Application.GameCore.GameStates
 {
@@ -20,29 +22,28 @@ namespace Application.GameCore.GameStates
             IInput input,
             ScoreHandler scoreHandler,
             Spacecraft spacecraft,
-            out LargeAsteroidPoolFactory largeAsteroidPoolFactory)
+            DiContainer container,
+            out LargeAsteroidPoolFactory largeAsteroidPoolFactory,
+            out UfoPoolFactory ufoPoolFactory)
         {
             _gameStateMachine = gameStateMachine;
 
             var loadConfigSystem = new LoadConfigSystem();
+            
+            SpawnGameField(
+                levelData,
+                container);
 
-            var projectileConfig = loadConfigSystem.GetConfig<ProjectileConfig>(ProjectileConfig.GuidProjectile);
-            var bulletPoolFactory = new ProjectilePoolFactory(levelData.BulletPrefab, 10, projectileConfig);
-            bulletPoolFactory.CreatePool();
-            
-            var laserPoolFactory = new ProjectilePoolFactory(levelData.LaserPrefab, 5, projectileConfig);
-            laserPoolFactory.CreatePool();
-            
-            var smallAsteroidConfig = loadConfigSystem.GetConfig<SmallAsteroidConfig>(SmallAsteroidConfig.GuidSmallAsteroid);
-            var smallAsteroidPoolFactory = new SmallAsteroidPoolFactory(
-                levelData.SmallAsteroidPrefab, 4, smallAsteroidConfig, scoreHandler);
-            smallAsteroidPoolFactory.CreatePool();
-            
-            var largeAsteroidConfig = loadConfigSystem.GetConfig<LargeAsteroidConfig>(LargeAsteroidConfig.GuidLargeAsteroid);
-            largeAsteroidPoolFactory = new LargeAsteroidPoolFactory(
-                levelData.LargeAsteroidPrefab, 4, largeAsteroidConfig, scoreHandler, smallAsteroidPoolFactory);
-            largeAsteroidPoolFactory.CreatePool();
-            
+            InitEntitiesPools(
+                levelData, 
+                scoreHandler, 
+                loadConfigSystem, 
+                container,
+                out var bulletPoolFactory,
+                out var laserPoolFactory,
+                out largeAsteroidPoolFactory,
+                out ufoPoolFactory);
+
             InitPlayer(
                 bulletPoolFactory,
                 laserPoolFactory,
@@ -50,7 +51,7 @@ namespace Application.GameCore.GameStates
                 loadConfigSystem,
                 spacecraft);
         }
-        
+
         public void Enter()
         {
             _gameStateMachine.EnterIn<LoopState>();
@@ -59,6 +60,61 @@ namespace Application.GameCore.GameStates
         public void Exit()
         {
             
+        }
+
+        private void SpawnGameField(
+            LevelData levelData,
+            DiContainer container)
+        {
+            var gameField = Object.Instantiate(levelData.GameFieldPrefab, Vector3.zero, Quaternion.identity);
+            gameField.Init(levelData.RectGameBackground, levelData.GameCanvas);
+            
+            container
+                .BindInstance(gameField)
+                .AsSingle()
+                .NonLazy();
+            container.Inject(gameField);
+        }
+        
+        private void InitEntitiesPools(
+            LevelData levelData, 
+            ScoreHandler scoreHandler,
+            LoadConfigSystem loadConfigSystem,
+            DiContainer container,
+            out ProjectilePoolFactory bulletPoolFactory,
+            out ProjectilePoolFactory laserPoolFactory,
+            out LargeAsteroidPoolFactory largeAsteroidPoolFactory,
+            out UfoPoolFactory ufoPoolFactory)
+        {
+            var explosionEffectPool = new PoolFactory<ExplosionEffect>(levelData.ExplosionEffectPrefab, 4);
+            explosionEffectPool.CreatePool();
+            container
+                .BindInstance(explosionEffectPool)
+                .AsSingle()
+                .NonLazy();
+            
+            var projectileConfig = loadConfigSystem.GetConfig<ProjectileConfig>(ProjectileConfig.GuidProjectile);
+            bulletPoolFactory = new ProjectilePoolFactory(levelData.BulletPrefab, 10, projectileConfig);
+            bulletPoolFactory.CreatePool();
+            
+            laserPoolFactory = new ProjectilePoolFactory(levelData.LaserPrefab, 5, projectileConfig);
+            laserPoolFactory.CreatePool();
+            
+            var smallAsteroidConfig = loadConfigSystem.GetConfig<SmallAsteroidConfig>(SmallAsteroidConfig.GuidSmallAsteroid);
+            var smallAsteroidPoolFactory = new SmallAsteroidPoolFactory(
+                levelData.SmallAsteroidPrefab, 4, smallAsteroidConfig, scoreHandler, container);
+            smallAsteroidPoolFactory.CreatePool();
+            
+            var largeAsteroidConfig = loadConfigSystem.GetConfig<LargeAsteroidConfig>(LargeAsteroidConfig.GuidLargeAsteroid);
+            largeAsteroidPoolFactory = new LargeAsteroidPoolFactory(
+                levelData.LargeAsteroidPrefab, 4, largeAsteroidConfig, scoreHandler, smallAsteroidPoolFactory, container);
+            largeAsteroidPoolFactory.CreatePool();
+
+            var bulletWeaponConfig = loadConfigSystem.GetConfig<BulletWeaponConfig>(BulletWeaponConfig.GuidBulletWeapon);
+            var ufoConfig = loadConfigSystem.GetConfig<UfoConfig>(UfoConfig.GuidUfo);
+            ufoPoolFactory = new UfoPoolFactory(
+                levelData.UfoPrefab, 4, ufoConfig, scoreHandler, container, bulletPoolFactory, bulletWeaponConfig);
+            ufoPoolFactory.CreatePool();
         }
 
         private void InitPlayer(

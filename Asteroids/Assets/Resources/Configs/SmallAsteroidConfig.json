@@ -1,8 +1,8 @@
 {
+  "Speed": 2.0,
   "MaxHealth": 1,
   "Damage": 1,
   "ScoreValue": 1,
-  "Speed": 3.0,
   "GameEntityType": 0,
   "Guid": "SmallAsteroidConfig"
 }

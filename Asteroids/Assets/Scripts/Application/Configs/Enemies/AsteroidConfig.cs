@@ -20,10 +20,11 @@ namespace Application.Configs.Enemies
                 maxHealth,
                 damage,
                 scoreValue,
-                speed,
                 gameEntityType)
         {
-            
+            Speed = speed;
         }
+        
+        public float Speed { get; private set; }
     }
 }
