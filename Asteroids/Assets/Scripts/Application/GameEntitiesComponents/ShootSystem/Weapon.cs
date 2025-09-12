@@ -1,6 +1,6 @@
+using System;
 using Application.GameEntities;
 using Application.GameEntitiesComponents.ShootSystem.Weapons;
-using Application.PoolFactories;
 using UniRx;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ namespace Application.GameEntitiesComponents.ShootSystem
 {
     public abstract class Weapon
     {
-        private readonly PoolFactory<Projectile> _projectilesPool;
+        private readonly Func<Vector2, Quaternion, Projectile> _getProjectile;
         private readonly Transform _shootPoint;
         private readonly GameEntityTypes _ownerType;
         private readonly float _reloadDelay;
@@ -19,13 +19,13 @@ namespace Application.GameEntitiesComponents.ShootSystem
         
         public Weapon(
             Transform shootPoint, 
-            PoolFactory<Projectile> projectilePool,
+            Func<Vector2, Quaternion, Projectile> projectilePool,
             GameEntityTypes ownerType,
             float reloadDelay,
             WeaponTypes weaponType)
         {
             _shootPoint = shootPoint;
-            _projectilesPool = projectilePool;
+            _getProjectile = projectilePool;
             _ownerType = ownerType;
             _reloadDelay = reloadDelay;
             WeaponType = weaponType;
@@ -50,7 +50,7 @@ namespace Application.GameEntitiesComponents.ShootSystem
 
             _isReloaded = false;
             CurrentReloadDelay.Value = 0f;
-            var projectile = _projectilesPool.GetPoolEntity(_shootPoint.position, _shootPoint.rotation);
+            var projectile = _getProjectile.Invoke(_shootPoint.position, _shootPoint.rotation);
             projectile.SetOwnerType(_ownerType);
 
             return true;

@@ -1,10 +1,11 @@
 using Domain;
 using Domain.Properties;
 using UnityEngine;
+using Zenject;
 
 namespace Application.PoolFactories
 {
-    public class PoolFactory<T>
+    public class PoolFactory<T> : IInitializable
         where T : MonoBehaviour, IPoolEntity
     {
         private readonly T _entity;
@@ -18,16 +19,9 @@ namespace Application.PoolFactories
             _entityPreloadCount = entityPreloadCount;
         }
         
-        private void ReturnEntity(IPoolEntity entity) => _entitiesPool.Return((T)entity);
-        private void ReturnEntityAction(T entity) => entity.ChangeStateEntity(false);
-        private void GetEntityAction(T entity) => entity.ChangeStateEntity(true);
-        
-        protected virtual T Preload()
+        public void Initialize()
         {
-            var newEntity = Object.Instantiate(_entity, Vector2.zero, Quaternion.identity);
-            newEntity.SpawnInit(ReturnEntity);
-            
-            return newEntity;
+            CreatePool();
         }
         
         public virtual T GetPoolEntity(Vector2 positionAppearance, Quaternion rotationAppearance)
@@ -37,10 +31,22 @@ namespace Application.PoolFactories
     
             return newEntity;
         }
-
-        public void CreatePool()
+        
+        protected virtual T Preload()
+        {
+            var newEntity = Object.Instantiate(_entity, Vector2.zero, Quaternion.identity);
+            newEntity.SpawnInit(ReturnEntity);
+            
+            return newEntity;
+        }
+        
+        private void CreatePool()
         {
             _entitiesPool = new PoolBase<T>(Preload, GetEntityAction, ReturnEntityAction, _entityPreloadCount);
         }
+        
+        private void ReturnEntity(IPoolEntity entity) => _entitiesPool.Return((T)entity);
+        private void ReturnEntityAction(T entity) => entity.ChangeStateEntity(false);
+        private void GetEntityAction(T entity) => entity.ChangeStateEntity(true);
     }
 }

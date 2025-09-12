@@ -1,44 +1,46 @@
 using System;
 using System.Collections.Generic;
 using Application.GameCore.GameStates;
-using Application.GameEntities;
-using Application.GameHandlers;
+using Application.GameEntities.Enemies;
 using Application.Inputs;
+using Application.PoolFactories;
 using Domain;
 using Domain.Properties;
 using Zenject;
 
 namespace Application.GameCore
 {
-    public class GameStateMachine : StateMachine
+    public class GameStateMachine : StateMachine, IDisposable
     {
         public GameStateMachine(
             LevelData levelData, 
-            ScoreHandler scoreHandler,
-            Spacecraft spacecraft,
-            DiContainer container)
+            InjectablePoolFactory<LargeAsteroid> largeAsteroidPoolFactory,
+            InjectablePoolFactory<Ufo> ufoPoolFactory,
+            IInput input,
+            SignalBus signalBus,
+            LoadConfigSystem loadConfigSystem)
         {
-            var input = new PCInput();
-            
             States = new Dictionary<Type, IState>
             {
-                [typeof(LoadState)] = new LoadState(
-                    levelData, 
-                    this,
-                    input,
-                    scoreHandler,
-                    spacecraft,
-                    container,
-                    out var largeAsteroidPoolFactory,
-                    out var ufoPoolFactory),
                 [typeof(LoopState)] = new LoopState(
                     levelData, 
                     input,
                     largeAsteroidPoolFactory,
-                    ufoPoolFactory),
+                    ufoPoolFactory,
+                    signalBus,
+                    loadConfigSystem),
             };
             
-            EnterIn<LoadState>();
+            EnterIn<LoopState>();
+        }
+
+        public void Dispose()
+        {
+            foreach (var state in States)
+            {
+                var disposable = state.Value as IDisposable;
+                disposable?.Dispose();
+            }
         }
     }
 }

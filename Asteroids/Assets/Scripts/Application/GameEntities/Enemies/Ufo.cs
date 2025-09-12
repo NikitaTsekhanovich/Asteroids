@@ -2,9 +2,10 @@ using Application.Configs.Enemies;
 using Application.Configs.WeaponsConfigs;
 using Application.GameEntitiesComponents;
 using Application.GameEntitiesComponents.ShootSystem;
+using Application.GameEntitiesComponents.ShootSystem.Projectiles;
 using Application.GameEntitiesComponents.ShootSystem.Weapons;
-using Application.GameHandlers;
 using Application.PoolFactories;
+using Application.SignalBusEvents;
 using UnityEngine;
 using Zenject;
 
@@ -14,16 +15,17 @@ namespace Application.GameEntities.Enemies
     {
         [SerializeField] private Transform _shootPoint;
         
+        [Inject] private InjectablePoolFactory<Bullet> _bulletPool;
         [Inject] private Spacecraft _spacecraft;
+        [Inject] private SignalBus _signalBus;
 
         private InertialMovement _inertialMovement;
         private Weapon _weapon;
 
-        public override void Construct(EnemyConfig enemyConfig, ScoreHandler scoreHandler)
+        public override void LateSpawnInit()
         {
-            base.Construct(enemyConfig, scoreHandler);
+            var ufoConfig = LoadConfigSystem.GetConfig<UfoConfig>(UfoConfig.GuidUfo);
             
-            var ufoConfig = enemyConfig as UfoConfig;
             _inertialMovement = new InertialMovement(
                 ufoConfig.RotationSpeed,
                 ufoConfig.MaxSpeed,
@@ -31,18 +33,11 @@ namespace Application.GameEntities.Enemies
                 ufoConfig.Decelerate,
                 ufoConfig.ForceInertia,
                 Rigidbody);
-        }
-
-        public void CreateWeapon(
-            PoolFactory<Projectile> bulletPool, 
-            BulletWeaponConfig bulletWeaponConfig)
-        {
-            _weapon = new BulletWeapon(
-                _shootPoint,
-                bulletPool,
-                GameEntityType,
-                bulletWeaponConfig.ReloadDelay,
-                bulletWeaponConfig.WeaponType);
+            
+            SetConfig(ufoConfig);
+            CreateWeapon();
+            
+            base.LateSpawnInit();
         }
 
         protected override void UpdateSystems()
@@ -58,11 +53,30 @@ namespace Application.GameEntities.Enemies
             Move();
         }
 
+        protected override void Die()
+        {
+            _signalBus.Fire<UfoDieSignal>();
+            base.Die();
+        }
+
         private void Move()
         {
             _inertialMovement.Move(new Vector2(
                 GetRotationInput(),
                 1));
+        }
+        
+        private void CreateWeapon()
+        {
+            var bulletWeaponConfig =
+                LoadConfigSystem.GetConfig<BulletWeaponConfig>(BulletWeaponConfig.GuidBulletWeapon);
+            
+            _weapon = new BulletWeapon(
+                _shootPoint,
+                _bulletPool,
+                GameEntityType,
+                bulletWeaponConfig.ReloadDelay,
+                bulletWeaponConfig.WeaponType);
         }
 
         private float GetRotationInput()

@@ -27,6 +27,7 @@ namespace Editor
             await CreateConfig<ProjectileConfig>(ProjectileConfig.GuidProjectile);
             await CreateConfig<BulletWeaponConfig>(BulletWeaponConfig.GuidBulletWeapon);
             await CreateConfig<LaserWeaponConfig>(LaserWeaponConfig.GuidLaserWeapon);
+            await CreateConfig<EnemiesSpawnerConfig>(EnemiesSpawnerConfig.GuidEnemiesSpawnerConfig);
             
             EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();

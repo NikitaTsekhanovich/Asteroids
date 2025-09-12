@@ -15,20 +15,13 @@ namespace Presentation.ViewModels
         [Inject]
         private void Construct(Spacecraft spacecraft)
         {
-            spacecraft.OnInitialized += OnInitializedSpacecraft;
+            _health = spacecraft.Health;
+            _health.CurrentHealth.Subscribe(OnChangedHealth);
         }
         
         public void Dispose()
         {
             _health.CurrentHealth.Dispose();
-        }
-
-        private void OnInitializedSpacecraft(Spacecraft spacecraft)
-        {
-            spacecraft.OnInitialized -= OnInitializedSpacecraft;
-            
-            _health = spacecraft.Health;
-            _health.CurrentHealth.Subscribe(OnChangedHealth);
         }
 
         private void OnChangedHealth(int hearts)

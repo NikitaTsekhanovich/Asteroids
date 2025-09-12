@@ -1,4 +1,5 @@
 using Application.GameEntities;
+using Application.GameEntitiesComponents.ShootSystem.Projectiles;
 using Application.PoolFactories;
 using UnityEngine;
 
@@ -8,12 +9,12 @@ namespace Application.GameEntitiesComponents.ShootSystem.Weapons
     {
         public BulletWeapon(
             Transform shootPoint, 
-            PoolFactory<Projectile> projectilePool, 
+            InjectablePoolFactory<Bullet> projectilePoolFactory, 
             GameEntityTypes ownerType, 
             float reloadDelay,
             WeaponTypes weaponType) : 
             base(shootPoint, 
-                projectilePool, 
+                projectilePoolFactory.GetPoolEntity, 
                 ownerType, 
                 reloadDelay,
                 weaponType)

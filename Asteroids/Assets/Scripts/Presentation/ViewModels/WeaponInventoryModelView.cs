@@ -3,6 +3,7 @@ using Application.GameEntities;
 using Application.GameEntitiesComponents.ShootSystem;
 using Application.GameEntitiesComponents.ShootSystem.Weapons;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace Presentation.ViewModels
@@ -21,7 +22,15 @@ namespace Presentation.ViewModels
         [Inject]
         private void Construct(Spacecraft spacecraft)
         {
-            spacecraft.OnInitialized += OnInitializedSpacecraft;
+            _weaponInventory = spacecraft.WeaponInventory;
+            
+            _bulletWeapon = _weaponInventory.GetWeapon<BulletWeapon>(WeaponTypes.BulletWeapon);
+            _laserWeapon = _weaponInventory.GetWeapon<LaserWeapon>(WeaponTypes.LaserWeapon);
+
+            _weaponInventory.CurrentWeaponType.Subscribe(OnChangeChosenSlot);
+            _bulletWeapon.CurrentReloadDelay.Subscribe(OnChangedBulletWeaponReloadProgress);
+            _laserWeapon.CurrentReloadDelay.Subscribe(OnChangedLaserWeaponReloadProgress);
+            _laserWeapon.LasersProgress.Subscribe(OnChangeStateLaser);
         }
         
         public void Dispose()
@@ -35,21 +44,6 @@ namespace Presentation.ViewModels
         public void ClickChooseWeapon(WeaponTypes weaponType)
         {
             _weaponInventory.ChooseWeapon(weaponType);
-        }
-        
-        private void OnInitializedSpacecraft(Spacecraft spacecraft)
-        {
-            spacecraft.OnInitialized -= OnInitializedSpacecraft;
-
-            _weaponInventory = spacecraft.WeaponInventory;
-            
-            _bulletWeapon = _weaponInventory.GetWeapon<BulletWeapon>(WeaponTypes.BulletWeapon);
-            _laserWeapon = _weaponInventory.GetWeapon<LaserWeapon>(WeaponTypes.LaserWeapon);
-
-            _weaponInventory.CurrentWeaponType.Subscribe(OnChangeChosenSlot);
-            _bulletWeapon.CurrentReloadDelay.Subscribe(OnChangedBulletWeaponReloadProgress);
-            _laserWeapon.CurrentReloadDelay.Subscribe(OnChangedLaserWeaponReloadProgress);
-            _laserWeapon.LasersProgress.Subscribe(OnChangeStateLaser);
         }
 
         private void OnChangedBulletWeaponReloadProgress(float currentProgress)

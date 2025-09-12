@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Application.GameEntities;
+using Application.GameEntitiesComponents.ShootSystem.Projectiles;
 using Application.PoolFactories;
 using UniRx;
 using UnityEngine;
@@ -21,13 +22,13 @@ namespace Application.GameEntitiesComponents.ShootSystem.Weapons
 
         public LaserWeapon(
             Transform shootPoint, 
-            PoolFactory<Projectile> projectilePool, 
+            InjectablePoolFactory<Laser> projectilePool, 
             GameEntityTypes ownerType, 
             float reloadDelay,
             float reloadLaserDelay,
             WeaponTypes weaponType) : 
             base(shootPoint, 
-                projectilePool, 
+                projectilePool.GetPoolEntity, 
                 ownerType, 
                 reloadDelay,
                 weaponType)

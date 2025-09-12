@@ -13,6 +13,11 @@ namespace Application.GameEntities
             _returnAction = returnAction;
         }
 
+        public virtual void LateSpawnInit()
+        {
+            
+        }
+
         public virtual void ActiveInit(Vector3 startPosition, Quaternion startRotation)
         {
             transform.position = startPosition;

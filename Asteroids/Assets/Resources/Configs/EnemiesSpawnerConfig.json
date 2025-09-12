@@ -1,0 +1,8 @@
+{
+  "SpawnIntervalAsteroids": 5.0,
+  "SpawnIntervalUfo": 8.0,
+  "TimeUfoAppearance": 20.0,
+  "MaximumNumberAsteroids": 4,
+  "MaximumNumberUfo": 2,
+  "Guid": "EnemiesSpawnerConfig"
+}

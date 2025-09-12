@@ -1,17 +1,19 @@
-using System;
 using System.Collections.Generic;
 using Application.Configs;
 using Application.Configs.WeaponsConfigs;
 using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
 using Application.GameEntitiesComponents.ShootSystem;
+using Application.GameEntitiesComponents.ShootSystem.Projectiles;
 using Application.GameEntitiesComponents.ShootSystem.Weapons;
 using Application.GameEntitiesComponents.Spacecraft;
 using Application.GameEntitiesComponents.Spacecraft.States;
 using Application.Inputs;
 using Application.PoolFactories;
+using Application.SignalBusEvents;
 using UniRx;
 using UnityEngine;
+using Zenject;
 
 namespace Application.GameEntities
 {
@@ -26,19 +28,27 @@ namespace Application.GameEntities
         private SpacecraftStateMachine _spacecraftStateMachine;
         private IInput _input;
         private EncounterHandler _encounterHandler;
+        private SignalBus _signalBus;
+        private bool _isPaused;
+        private Vector3 _currentVelocity;
         
         public readonly ReactiveProperty<Vector2> Position = new ();
         public readonly ReactiveProperty<Quaternion> Rotation = new ();
         public readonly ReactiveProperty<float> CurrentSpeed = new ();
         
+        [Inject]
         public void Construct(
             IInput input,
-            PoolFactory<Projectile> bulletPoolFactory,
-            PoolFactory<Projectile> laserPoolFactory,
-            SpacecraftConfig spacecraftConfig,
-            BulletWeaponConfig bulletWeaponConfig,
-            LaserWeaponConfig laserWeaponConfig)
+            InjectablePoolFactory<Bullet> bulletPoolFactory,
+            InjectablePoolFactory<Laser> laserPoolFactory,
+            LoadConfigSystem loadConfigSystem,
+            SignalBus signalBus)
         {
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PauseStateSignal>(ChangeUpdateState);
+            
+            var spacecraftConfig = loadConfigSystem.GetConfig<SpacecraftConfig>(SpacecraftConfig.GuidSpacecraft);
+            
             GameEntityType = spacecraftConfig.GameEntityType;
             _rigidbody = GetComponent<Rigidbody2D>();
             _input = input;
@@ -55,12 +65,9 @@ namespace Application.GameEntities
             CreateWeaponInventory(
                 bulletPoolFactory, 
                 laserPoolFactory,
-                bulletWeaponConfig,
-                laserWeaponConfig);
+                loadConfigSystem);
 
             Subscribe();
-            
-            OnInitialized?.Invoke(this);
         }
 
         public GameEntityTypes GameEntityType { get; private set; }
@@ -68,10 +75,11 @@ namespace Application.GameEntities
         public WeaponInventory WeaponInventory { get; private set; }
         public bool IsCanEncounter => _spacecraftStateMachine.GetCurrentTypeState() != typeof(InvulnerabilityState);
         public Transform Transform => transform;
-        public event Action<Spacecraft> OnInitialized;
 
         private void Update()
         {
+            if (_isPaused) return;
+            
             Position.Value = transform.position;
             Rotation.Value = transform.rotation;
             CurrentSpeed.Value = _rigidbody.velocity.magnitude;
@@ -83,11 +91,14 @@ namespace Application.GameEntities
 
         private void FixedUpdate()
         {
+            if (_isPaused) return;
+            
             _spacecraftStateMachine?.FixedUpdateSystem();
         }
 
         private void OnDestroy()
         {
+            _signalBus.Unsubscribe<PauseStateSignal>(ChangeUpdateState);
             _spacecraftStateMachine.Dispose();
             Unsubscribe();
         }
@@ -122,11 +133,13 @@ namespace Application.GameEntities
         }
         
         private void CreateWeaponInventory(
-            PoolFactory<Projectile> bulletPoolFactory, 
-            PoolFactory<Projectile> laserPoolFactory,
-            BulletWeaponConfig bulletWeaponConfig,
-            LaserWeaponConfig laserWeaponConfig)
+            InjectablePoolFactory<Bullet> bulletPoolFactory, 
+            InjectablePoolFactory<Laser> laserPoolFactory,
+            LoadConfigSystem loadConfigSystem)
         {
+            var bulletWeaponConfig = loadConfigSystem.GetConfig<BulletWeaponConfig>(BulletWeaponConfig.GuidBulletWeapon);
+            var laserWeaponConfig = loadConfigSystem.GetConfig<LaserWeaponConfig>(LaserWeaponConfig.GuidLaserWeapon);
+            
             var bulletWeapon = new BulletWeapon(
                 _shootPoint, 
                 bulletPoolFactory, 
@@ -166,6 +179,21 @@ namespace Application.GameEntities
         private void Die()
         {
             Debug.Log("DIE");
+        }
+
+        private void ChangeUpdateState(PauseStateSignal pauseStateSignal)
+        {
+            _isPaused = pauseStateSignal.IsPaused;
+
+            if (_isPaused)
+            {
+                _currentVelocity = _rigidbody.velocity;
+                _rigidbody.velocity = Vector2.zero;
+            }
+            else
+            {
+                _rigidbody.velocity = _currentVelocity;
+            }
         }
     }
 }

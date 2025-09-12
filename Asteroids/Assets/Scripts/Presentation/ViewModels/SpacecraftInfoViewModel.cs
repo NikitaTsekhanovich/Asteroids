@@ -17,7 +17,11 @@ namespace Presentation.ViewModels
         [Inject]
         private void Construct(Spacecraft spacecraft)
         {
-            spacecraft.OnInitialized += OnInitializedSpacecraft;
+            _spacecraft = spacecraft;
+
+            _spacecraft.Position.Subscribe(OnChangedPosition);
+            _spacecraft.Rotation.Subscribe(OnChangedRotation);
+            _spacecraft.CurrentSpeed.Subscribe(OnChangedSpeed);
         }
         
         public void Dispose()
@@ -25,17 +29,6 @@ namespace Presentation.ViewModels
             _spacecraft.CurrentSpeed.Dispose();
             _spacecraft.Position.Dispose();
             _spacecraft.Rotation.Dispose();
-        }
-        
-        private void OnInitializedSpacecraft(Spacecraft spacecraft)
-        {
-            spacecraft.OnInitialized -= OnInitializedSpacecraft;
-            
-            _spacecraft = spacecraft;
-
-            _spacecraft.Position.Subscribe(OnChangedPosition);
-            _spacecraft.Rotation.Subscribe(OnChangedRotation);
-            _spacecraft.CurrentSpeed.Subscribe(OnChangedSpeed);
         }
 
         private void OnChangedPosition(Vector2 position)

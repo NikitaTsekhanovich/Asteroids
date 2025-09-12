@@ -1,33 +1,32 @@
 using Application.Configs.Enemies;
-using Application.GameHandlers;
 using Application.PoolFactories;
+using Application.SignalBusEvents;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace Application.GameEntities.Enemies
 {
     public class LargeAsteroid : Asteroid
     {
+        [Inject] private InjectablePoolFactory<SmallAsteroid> _smallAsteroidPoolFactory;
         [Inject] private GameField _gameField;
+        [Inject] private SignalBus _signalBus;
         
-        private SmallAsteroidPoolFactory _smallAsteroidPoolFactory;
         private int _smallAsteroidsCount;
-
-        public override void Construct(EnemyConfig enemyConfig, ScoreHandler scoreHandler)
-        {
-            base.Construct(enemyConfig, scoreHandler);
-            
-            var largeAsteroidConfig = enemyConfig as LargeAsteroidConfig;
-            _smallAsteroidsCount = largeAsteroidConfig.SmallAsteroidsCount;
-        }
-
-        public void SetSmallAsteroidPool(SmallAsteroidPoolFactory smallAsteroidPoolFactory)
-        {
-            _smallAsteroidPoolFactory = smallAsteroidPoolFactory;
-        }
         
+        public override void LateSpawnInit()
+        {
+            var largeAsteroidConfig = LoadConfigSystem.GetConfig<LargeAsteroidConfig>(LargeAsteroidConfig.GuidLargeAsteroid);
+            _smallAsteroidsCount = largeAsteroidConfig.SmallAsteroidsCount;
+            SetConfig(largeAsteroidConfig);
+            
+            base.LateSpawnInit();
+        }
+
         protected override void Die()
         {
+            _signalBus.Fire<LargeAsteroidDieSignal>();
             SpawnSmallAsteroids();
             base.Die();
         }

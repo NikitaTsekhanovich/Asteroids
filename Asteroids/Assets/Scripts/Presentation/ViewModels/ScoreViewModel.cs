@@ -26,6 +26,6 @@ namespace Presentation.ViewModels
         private void OnChangedScore(int score)
         {
             ScoreText.Value = $"Score: {score}";
-        } 
+        }
     }
 }

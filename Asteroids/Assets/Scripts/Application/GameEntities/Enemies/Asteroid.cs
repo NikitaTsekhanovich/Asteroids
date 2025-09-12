@@ -1,22 +1,21 @@
 using Application.Configs.Enemies;
 using Application.GameEntitiesComponents;
-using Application.GameHandlers;
 using UnityEngine;
 
 namespace Application.GameEntities.Enemies
 {
-    public class Asteroid : Enemy
+    public abstract class Asteroid : Enemy
     {
         private LinearMovement _linearMovement;
-        
-        public override void Construct(EnemyConfig enemyConfig, ScoreHandler scoreHandler)
+
+        protected override void SetConfig(EnemyConfig enemyConfig)
         {
-            base.Construct(enemyConfig, scoreHandler);
+            base.SetConfig(enemyConfig);
             
             var asteroidConfig = enemyConfig as AsteroidConfig;
             _linearMovement = new LinearMovement(Rigidbody, asteroidConfig.Speed);
         }
-        
+
         public void SetMovePointVelocity(Vector2 movePoint)
         {
             _linearMovement.SetMovePointVelocity(movePoint);
