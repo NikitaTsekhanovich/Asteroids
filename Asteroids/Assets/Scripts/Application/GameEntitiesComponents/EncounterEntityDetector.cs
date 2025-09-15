@@ -23,9 +23,6 @@ namespace Application.GameEntitiesComponents
                 encounteredEntity.IsCanEncounter &&
                 _owner.IsCanEncounter)
             {
-                if (_owner.GameEntityType == GameEntityTypes.Player)
-                    Debug.LogWarning($"Name: {other.name}, Pos: {other.transform.position}");
-                
                 OnEncounter.Invoke(encounteredEntity.Transform);
             }
         }

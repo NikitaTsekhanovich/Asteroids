@@ -12,6 +12,7 @@ namespace Application.Installers
             Container.DeclareSignal<LargeAsteroidDieSignal>();
             Container.DeclareSignal<UfoDieSignal>();
             Container.DeclareSignal<PauseStateSignal>();
+            Container.DeclareSignal<SpacecraftDieSignal>();
         }
     }
 }

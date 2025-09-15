@@ -17,10 +17,12 @@ namespace Application.GameEntities.Enemies
         
         [Inject] private InjectablePoolFactory<Bullet> _bulletPool;
         [Inject] private Spacecraft _spacecraft;
-        [Inject] private SignalBus _signalBus;
 
         private InertialMovement _inertialMovement;
         private Weapon _weapon;
+        private bool _isStunned;
+        private float _timeStun;
+        private float _currentTimeStun;
 
         public override void LateSpawnInit()
         {
@@ -33,6 +35,8 @@ namespace Application.GameEntities.Enemies
                 ufoConfig.Decelerate,
                 ufoConfig.ForceInertia,
                 Rigidbody);
+
+            _timeStun = ufoConfig.TimeStun;
             
             SetConfig(ufoConfig);
             CreateWeapon();
@@ -40,8 +44,20 @@ namespace Application.GameEntities.Enemies
             base.LateSpawnInit();
         }
 
+        public override void Encounter(Transform encounteredEntity)
+        {
+            base.Encounter(encounteredEntity);
+            _isStunned = true;
+        }
+
         protected override void UpdateSystems()
         {
+            if (_isStunned)
+            {
+                RecoveryFromStun();
+                return;
+            }
+            
             base.UpdateSystems();
             _weapon.Reload();
             _weapon.TryShoot();
@@ -49,14 +65,27 @@ namespace Application.GameEntities.Enemies
 
         protected override void FixedUpdateSystems()
         {
+            if (_isStunned) return;
+            
             base.FixedUpdateSystems();
             Move();
         }
 
         protected override void Die()
         {
-            _signalBus.Fire<UfoDieSignal>();
+            SignalBus.Fire<UfoDieSignal>();
             base.Die();
+        }
+
+        private void RecoveryFromStun()
+        {
+            _currentTimeStun += Time.deltaTime;
+
+            if (_currentTimeStun >= _timeStun)
+            {
+                _currentTimeStun = 0f;
+                _isStunned = false;
+            }
         }
 
         private void Move()

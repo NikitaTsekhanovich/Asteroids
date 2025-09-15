@@ -15,23 +15,26 @@ namespace Application.GameEntitiesComponents.Spacecraft
             SpacecraftConfig spacecraftConfig,
             Rigidbody2D rigidbody,
             IInput input,
-            ParticleSystem invulnerabilityEffect)
+            ParticleSystem invulnerabilityEffect,
+            InertialMovement inertialMovement)
         {
             States = new Dictionary<Type, IState>
             {
                 [typeof(MoveState)] = new MoveState(
-                    spacecraftConfig,
-                    rigidbody,
-                    input),
+                    input,
+                    inertialMovement),
                 [typeof(InvulnerabilityState)]  = new InvulnerabilityState(
                     spacecraftConfig,
                     invulnerabilityEffect,
                     this),
+                [typeof(PauseState)] = new PauseState(
+                    rigidbody,
+                    invulnerabilityEffect)
             };
             
             EnterIn<MoveState>();
         }
-
+        
         public Type GetCurrentTypeState() => CurrentState.GetType();
         
         public void Dispose()

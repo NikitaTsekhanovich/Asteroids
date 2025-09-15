@@ -1,4 +1,5 @@
 using Application.Configs;
+using Application.SignalBusEvents;
 using UnityEngine;
 
 namespace Application.GameEntitiesComponents.ShootSystem.Projectiles
@@ -25,6 +26,16 @@ namespace Application.GameEntitiesComponents.ShootSystem.Projectiles
             
             _mainModuleLaserEffect = _laserEffect.main;
             _mainModuleLaserEffect.startLifetimeMultiplier = projectileConfig.LifeTime;
+        }
+
+        protected override void ChangePauseState(PauseStateSignal pauseStateSignal)
+        {
+            base.ChangePauseState(pauseStateSignal);
+            
+            if (pauseStateSignal.IsPaused && _laserEffect.isPlaying)
+                _laserEffect.Pause();
+            else if (!pauseStateSignal.IsPaused && _laserEffect.isPaused)
+                _laserEffect.Play();
         }
     }
 }

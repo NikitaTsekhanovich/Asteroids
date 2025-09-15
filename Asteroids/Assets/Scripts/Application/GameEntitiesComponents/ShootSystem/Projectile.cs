@@ -1,6 +1,7 @@
 using Application.Configs;
 using Application.GameEntities;
 using Application.GameEntities.Properties;
+using Application.SignalBusEvents;
 using UnityEngine;
 using Zenject;
 
@@ -11,11 +12,13 @@ namespace Application.GameEntitiesComponents.ShootSystem
         [SerializeField] private DamageTakerDetector _damageTakerDetector;
 
         [Inject] private LoadConfigSystem _loadConfigSystem;
+        [Inject] private SignalBus _signalBus;
         
         private float _lifeTime;
         private float _currentLifeTime;
         private float _speed;
         private int _damage;
+        private bool _isPaused;
 
         public override void LateSpawnInit()
         {
@@ -25,10 +28,13 @@ namespace Application.GameEntitiesComponents.ShootSystem
             SetConfig(projectileConfig);
             
             _damageTakerDetector.OnDamageTakerDetected += DealDamage;
+            _signalBus.Subscribe<PauseStateSignal>(ChangePauseState);
         }
         
         private void Update()
         {
+            if (_isPaused) return;
+            
             CheckLifeTime();
             Move();
         }
@@ -36,6 +42,7 @@ namespace Application.GameEntitiesComponents.ShootSystem
         private void OnDestroy()
         {
             _damageTakerDetector.OnDamageTakerDetected -= DealDamage;
+            _signalBus.Unsubscribe<PauseStateSignal>(ChangePauseState);
         }
         
         public void SetOwnerType(GameEntityTypes ownerType)
@@ -53,6 +60,11 @@ namespace Application.GameEntitiesComponents.ShootSystem
         protected virtual void DealDamage(ICanTakeDamage damageTaker)
         {
             damageTaker.TakeDamage(_damage);
+        }
+        
+        protected virtual void ChangePauseState(PauseStateSignal pauseStateSignal)
+        {
+            _isPaused = pauseStateSignal.IsPaused;
         }
         
         private void Move()

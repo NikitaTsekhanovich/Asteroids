@@ -2,6 +2,7 @@ using Application.GameEntities.Enemies;
 using Application.Inputs;
 using Application.PoolFactories;
 using Application.SignalBusEvents;
+using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
@@ -54,7 +55,16 @@ namespace Application.GameCore
 
         private void ChangeUpdateState(PauseStateSignal pauseStateSignal)
         {
-            _isPaused = pauseStateSignal.IsPaused;
+            _isPaused = pauseStateSignal.IsPaused || pauseStateSignal.IsOverGame;
+            
+            if (pauseStateSignal.IsPaused && !pauseStateSignal.IsOverGame)
+            {
+                DOTween.PauseAll();
+            }
+            else
+            {
+                DOTween.PlayAll();
+            }
         }
     }
 }

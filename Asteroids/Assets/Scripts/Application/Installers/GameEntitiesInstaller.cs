@@ -37,7 +37,7 @@ namespace Application.Installers
         private void InstallEffects()
         {
             Container
-                .BindInterfacesAndSelfTo<PoolFactory<ExplosionEffect>>()
+                .BindInterfacesAndSelfTo<InjectablePoolFactory<ExplosionEffect>>()
                 .AsSingle()
                 .WithArguments(_explosionEffectPrefab, 5)
                 .NonLazy();

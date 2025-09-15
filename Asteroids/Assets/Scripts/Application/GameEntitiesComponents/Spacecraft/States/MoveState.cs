@@ -1,5 +1,4 @@
 using System;
-using Application.Configs;
 using Application.Inputs;
 using Domain.Properties;
 using UnityEngine;
@@ -15,18 +14,10 @@ namespace Application.GameEntitiesComponents.Spacecraft.States
         private Vector2 _moveDirection;
         
         public MoveState(
-            SpacecraftConfig spacecraftConfig, 
-            Rigidbody2D rigidbody,
-            IInput input)
+            IInput input,
+            InertialMovement inertialMovement)
         {
-            _inertialMovement = new InertialMovement(
-                spacecraftConfig.RotationSpeed,
-                spacecraftConfig.MaxSpeed, 
-                spacecraftConfig.Acceleration, 
-                spacecraftConfig.Decelerate, 
-                spacecraftConfig.ForceInertia, 
-                rigidbody);
-            
+            _inertialMovement = inertialMovement;
             _input = input;
             
             _input.MoveInput.Subscribe(moveInput => _moveDirection = moveInput);
@@ -39,7 +30,7 @@ namespace Application.GameEntitiesComponents.Spacecraft.States
 
         public void Exit()
         {
-            _inertialMovement.SetSpeed(0f);
+            
         }
 
         public void FixedUpdateSystem()

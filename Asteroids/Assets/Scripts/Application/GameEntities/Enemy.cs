@@ -4,6 +4,7 @@ using Application.GameEntities.Properties;
 using Application.GameEntitiesComponents;
 using Application.GameHandlers;
 using Application.PoolFactories;
+using Application.SignalBusEvents;
 using Domain.Properties;
 using UnityEngine;
 using Zenject;
@@ -16,14 +17,17 @@ namespace Application.GameEntities
         [SerializeField] private DamageTakerDetector _damageTakerDetector;
         [SerializeField] private EncounterEntityDetector _encounterEntityDetector;
         
-        [Inject] private PoolFactory<ExplosionEffect> _explosionEffectPoolFactory;
+        [Inject] private InjectablePoolFactory<ExplosionEffect> _explosionEffectPoolFactory;
         [Inject] private ScoreHandler _scoreHandler;
         
         private Health _health;
         private EncounterHandler _encounterHandler;
         private int _damage;
         private int _scoreValue;
+        private bool _isPaused;
+        private Vector2 _previousVelocity;
         
+        [Inject] protected SignalBus SignalBus;
         [Inject] protected LoadConfigSystem LoadConfigSystem;
 
         protected Rigidbody2D Rigidbody;
@@ -44,6 +48,7 @@ namespace Application.GameEntities
             _health.OnDied += Die;
             _damageTakerDetector.OnDamageTakerDetected += DealDamage;
             _encounterEntityDetector.OnEncounter += Encounter;
+            SignalBus.Subscribe<PauseStateSignal>(ChangePauseState);
         }
 
         public GameEntityTypes GameEntityType { get; private set; }
@@ -52,11 +57,13 @@ namespace Application.GameEntities
 
         private void Update()
         {
+            if (_isPaused) return;
             UpdateSystems();
         }
 
         private void FixedUpdate()
         {
+            if (_isPaused) return;
             FixedUpdateSystems();
         }
 
@@ -65,9 +72,10 @@ namespace Application.GameEntities
             _health.OnDied -= Die;
             _damageTakerDetector.OnDamageTakerDetected -= DealDamage;
             _encounterEntityDetector.OnEncounter -= Encounter;
+            SignalBus.Unsubscribe<PauseStateSignal>(ChangePauseState);
         }
         
-        public void Encounter(Transform encounteredEntity)
+        public virtual void Encounter(Transform encounteredEntity)
         {
             _encounterHandler.Encounter(encounteredEntity, Rigidbody.velocity.magnitude);
         }
@@ -81,7 +89,7 @@ namespace Application.GameEntities
         {
             
         }
-
+        
         protected virtual void FixedUpdateSystems()
         {
             
@@ -109,6 +117,21 @@ namespace Application.GameEntities
         private void DealDamage(ICanTakeDamage damageTaker)
         {
             damageTaker.TakeDamage(_damage);
+        }
+
+        private void ChangePauseState(PauseStateSignal pauseStateSignal)
+        {
+            _isPaused = pauseStateSignal.IsPaused;
+
+            if (_isPaused)
+            {
+                _previousVelocity = Rigidbody.velocity;
+                Rigidbody.velocity = Vector2.zero;
+            }
+            else
+            {
+                Rigidbody.velocity = _previousVelocity;
+            }
         }
     }
 }

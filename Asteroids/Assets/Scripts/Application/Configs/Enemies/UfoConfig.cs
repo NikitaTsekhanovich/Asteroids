@@ -23,6 +23,7 @@ namespace Application.Configs.Enemies
             float acceleration,
             float decelerate,
             float forceInertia,
+            float timeStun,
             GameEntityTypes gameEntityType) : 
             base(guid,
                 maxHealth,
@@ -35,6 +36,7 @@ namespace Application.Configs.Enemies
             Acceleration = acceleration;
             Decelerate = decelerate;
             ForceInertia = forceInertia;
+            TimeStun = timeStun;
         }
         
         public float RotationSpeed { get; private set; }
@@ -42,5 +44,6 @@ namespace Application.Configs.Enemies
         public float Acceleration { get; private set; }
         public float Decelerate { get; private set; }
         public float ForceInertia { get; private set; }
+        public float TimeStun { get; set; }
     }
 }

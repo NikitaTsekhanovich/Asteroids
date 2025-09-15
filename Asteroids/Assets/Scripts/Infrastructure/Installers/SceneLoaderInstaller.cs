@@ -1,15 +1,13 @@
-using Application.Inputs;
 using Zenject;
 
-namespace Application.Installers
+namespace Infrastructure.Installers
 {
-    public class InputInstaller : MonoInstaller
+    public class SceneLoaderInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {
             Container
-                .Bind<IInput>()
-                .To<KeyboardInput>()
+                .Bind<SceneLoader>()
                 .AsSingle()
                 .NonLazy();
         }

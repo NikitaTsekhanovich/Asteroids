@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Application.Configs;
 using Application.Configs.WeaponsConfigs;
@@ -29,8 +30,10 @@ namespace Application.GameEntities
         private IInput _input;
         private EncounterHandler _encounterHandler;
         private SignalBus _signalBus;
+        private Type _previousStateType;
         private bool _isPaused;
-        private Vector3 _currentVelocity;
+        private InertialMovement _inertialMovement;
+        private InjectablePoolFactory<ExplosionEffect> _explosionPoolFactory;
         
         public readonly ReactiveProperty<Vector2> Position = new ();
         public readonly ReactiveProperty<Quaternion> Rotation = new ();
@@ -41,11 +44,13 @@ namespace Application.GameEntities
             IInput input,
             InjectablePoolFactory<Bullet> bulletPoolFactory,
             InjectablePoolFactory<Laser> laserPoolFactory,
+            InjectablePoolFactory<ExplosionEffect> explosionPoolFactory,
             LoadConfigSystem loadConfigSystem,
             SignalBus signalBus)
         {
+            _explosionPoolFactory = explosionPoolFactory;
             _signalBus = signalBus;
-            _signalBus.Subscribe<PauseStateSignal>(ChangeUpdateState);
+            _signalBus.Subscribe<PauseStateSignal>(ChangePauseState);
             
             var spacecraftConfig = loadConfigSystem.GetConfig<SpacecraftConfig>(SpacecraftConfig.GuidSpacecraft);
             
@@ -54,11 +59,20 @@ namespace Application.GameEntities
             _input = input;
             _encounterEntityDetector.SetOwner(this);
             
+            _inertialMovement = new InertialMovement(
+                spacecraftConfig.RotationSpeed,
+                spacecraftConfig.MaxSpeed,
+                spacecraftConfig.Acceleration,
+                spacecraftConfig.Decelerate,
+                spacecraftConfig.ForceInertia,
+                _rigidbody);
+            
             _spacecraftStateMachine = new SpacecraftStateMachine(
                 spacecraftConfig,
                 _rigidbody,
                 _input,
-                _invulnerabilityEffect);
+                _invulnerabilityEffect,
+                _inertialMovement);
             
             _encounterHandler = new EncounterHandler(_rigidbody);
             Health = new Health(spacecraftConfig.MaxHealth);
@@ -98,13 +112,14 @@ namespace Application.GameEntities
 
         private void OnDestroy()
         {
-            _signalBus.Unsubscribe<PauseStateSignal>(ChangeUpdateState);
+            _signalBus.Unsubscribe<PauseStateSignal>(ChangePauseState);
             _spacecraftStateMachine.Dispose();
             Unsubscribe();
         }
         
         public void Encounter(Transform encounteredEntity)
         {
+            _inertialMovement.SetSpeed(0f);
             _encounterHandler.Encounter(encounteredEntity);
             _spacecraftStateMachine.EnterIn<InvulnerabilityState>();
         }
@@ -178,21 +193,27 @@ namespace Application.GameEntities
 
         private void Die()
         {
-            Debug.Log("DIE");
+            _signalBus.Fire<SpacecraftDieSignal>();
+            _explosionPoolFactory.GetPoolEntity(transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
 
-        private void ChangeUpdateState(PauseStateSignal pauseStateSignal)
+        private void ChangePauseState(PauseStateSignal pauseStateSignal)
         {
             _isPaused = pauseStateSignal.IsPaused;
 
             if (_isPaused)
             {
-                _currentVelocity = _rigidbody.velocity;
-                _rigidbody.velocity = Vector2.zero;
+                _previousStateType = _spacecraftStateMachine.GetCurrentTypeState();
+                _spacecraftStateMachine.EnterIn<PauseState>();
             }
             else
             {
-                _rigidbody.velocity = _currentVelocity;
+                var method = typeof(SpacecraftStateMachine)
+                    .GetMethod(nameof(SpacecraftStateMachine.EnterIn))
+                    .MakeGenericMethod(_previousStateType);
+                
+                method.Invoke(_spacecraftStateMachine, null);
             }
         }
     }
