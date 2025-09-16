@@ -50,6 +50,7 @@ namespace Application.GameCore
 
         private void OnDestroy()
         {
+            _signalBus.Unsubscribe<PauseStateSignal>(ChangeUpdateState);
             _gameStateMachine.Dispose();
         }
 

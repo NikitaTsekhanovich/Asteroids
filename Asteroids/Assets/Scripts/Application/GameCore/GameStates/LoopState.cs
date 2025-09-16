@@ -50,7 +50,7 @@ namespace Application.GameCore.GameStates
         public void UpdateSystem()
         {
             _input.ReadInput();
-            _enemiesSpawner.Spawn();
+            // _enemiesSpawner.Spawn();
         }
         
         public void Dispose()

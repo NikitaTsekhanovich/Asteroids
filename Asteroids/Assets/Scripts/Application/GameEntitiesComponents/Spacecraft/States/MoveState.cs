@@ -9,7 +9,7 @@ namespace Application.GameEntitiesComponents.Spacecraft.States
     public class MoveState : IState, ICanFixedUpdate, IDisposable
     {
         private readonly InertialMovement _inertialMovement;
-        private readonly IInput _input;
+        private readonly IDisposable _disposableInput;
         
         private Vector2 _moveDirection;
         
@@ -18,9 +18,8 @@ namespace Application.GameEntitiesComponents.Spacecraft.States
             InertialMovement inertialMovement)
         {
             _inertialMovement = inertialMovement;
-            _input = input;
-            
-            _input.MoveInput.Subscribe(moveInput => _moveDirection = moveInput);
+        
+            _disposableInput = input.MoveInput.Subscribe(moveInput => _moveDirection = moveInput);
         }
         
         public void Enter()
@@ -40,7 +39,7 @@ namespace Application.GameEntitiesComponents.Spacecraft.States
         
         public void Dispose()
         {
-            _input.MoveInput.Dispose();
+            _disposableInput.Dispose();
         }
     }
 }

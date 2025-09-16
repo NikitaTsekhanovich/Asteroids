@@ -9,7 +9,7 @@ namespace Application.Inputs
     {
         public event Action OnShoot;
         public event Action<WeaponTypes> OnChooseWeapon;
-        public ReactiveProperty<Vector2> MoveInput { get; }
+        public ReactiveProperty<Vector2> MoveInput { get; } = new (Vector2.zero);
         
         public void ReadInput()
         {

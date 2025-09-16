@@ -50,7 +50,6 @@ namespace Application.GameEntities
         {
             _explosionPoolFactory = explosionPoolFactory;
             _signalBus = signalBus;
-            _signalBus.Subscribe<PauseStateSignal>(ChangePauseState);
             
             var spacecraftConfig = loadConfigSystem.GetConfig<SpacecraftConfig>(SpacecraftConfig.GuidSpacecraft);
             
@@ -112,7 +111,6 @@ namespace Application.GameEntities
 
         private void OnDestroy()
         {
-            _signalBus.Unsubscribe<PauseStateSignal>(ChangePauseState);
             _spacecraftStateMachine.Dispose();
             Unsubscribe();
         }
@@ -137,6 +135,7 @@ namespace Application.GameEntities
             _input.OnChooseWeapon += ChooseWeapon;
             Health.OnDied += Die;
             _encounterEntityDetector.OnEncounter += Encounter;
+            _signalBus.Subscribe<PauseStateSignal>(ChangePauseState);
         }
 
         private void Unsubscribe()
@@ -145,6 +144,7 @@ namespace Application.GameEntities
             _input.OnChooseWeapon -= ChooseWeapon;
             Health.OnDied -= Die;
             _encounterEntityDetector.OnEncounter -= Encounter;
+            _signalBus.Unsubscribe<PauseStateSignal>(ChangePauseState);
         }
         
         private void CreateWeaponInventory(
