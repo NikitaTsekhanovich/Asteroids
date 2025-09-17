@@ -4,6 +4,7 @@ using Application.Inputs;
 using Application.PoolFactories;
 using Application.SignalBusEvents;
 using DG.Tweening;
+using Infrastructure.AdControllers;
 using UnityEngine;
 using Zenject;
 
@@ -13,6 +14,7 @@ namespace Application.GameCore
     {
         [SerializeField] private LevelData _levelData;
         
+        [Inject] private ContainerAds _containerAds;
         [Inject] private InjectablePoolFactory<LargeAsteroid> _largeAsteroidPoolFactory;
         [Inject] private InjectablePoolFactory<Ufo> _ufoPoolFactory;
         [Inject] private IInput _input;
@@ -53,7 +55,10 @@ namespace Application.GameCore
         private void ChangeUpdateState(PauseStateSignal pauseStateSignal)
         {
             if (pauseStateSignal.IsPaused)
+            {
                 _gameStateMachine.EnterIn<PauseState>();
+                _containerAds.ShowInterstitialAd();
+            }
             else 
                 _gameStateMachine.EnterIn<LoopState>();
             

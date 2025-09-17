@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6969361120739248644}
   - component: {fileID: -7664463091547393646}
   - component: {fileID: -7285535844251971785}
+  - component: {fileID: -7754301273145932359}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -50,6 +51,7 @@ MonoBehaviour:
   _monoInstallers:
   - {fileID: -7664463091547393646}
   - {fileID: -7285535844251971785}
+  - {fileID: -7754301273145932359}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
@@ -88,3 +90,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0f95b19f40abe449e436780d8ee0dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-7754301273145932359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6500048385446549046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2823194dc318e439f8b628b1e84468, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _androidAdId: 5948588
+  _iosAdId: 5948589
+  _isTestMode: 1
+  _androidAdUnitId: Interstitial_Android
+  _iosAdUnitId: Interstitial_iOS
