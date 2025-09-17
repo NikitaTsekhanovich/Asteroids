@@ -1,5 +1,4 @@
 using Application.Inputs;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -9,14 +8,26 @@ namespace Presentation.ViewModels
     {
         private MobileInput _mobileInput;
         
-        public readonly ReactiveProperty<Vector2> Position = new ();
-        
         [Inject]
-        private void Construct(MobileInput mobileInput)
+        private void Construct(IInput mobileInput)
         {
-            _mobileInput = mobileInput;
+            _mobileInput = mobileInput as MobileInput;
+            IsActiveMobileInput = _mobileInput != null;
         }
-        
-        
+
+        public bool IsActiveMobileInput { get; private set; }
+
+        public void ReadJoystickInput(Vector2 inputData)
+        {
+            var position = inputData.y;
+            position = position > 0 ? 1 : 0;
+            
+            _mobileInput.ReadInput(new Vector2(inputData.x, position));
+        }
+
+        public void ClickShoot()
+        {
+            _mobileInput.ClickShoot();
+        }
     }
 }

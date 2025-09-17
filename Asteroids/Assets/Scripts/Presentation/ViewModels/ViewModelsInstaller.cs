@@ -25,6 +25,11 @@ namespace Presentation.ViewModels
                 .BindInterfacesAndSelfTo<WeaponInventoryModelView>()
                 .AsSingle()
                 .NonLazy();
+            
+            Container
+                .BindInterfacesAndSelfTo<MobileInputViewModel>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

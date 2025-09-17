@@ -1,3 +1,4 @@
+using Application.GameCore.GameStates;
 using Application.GameEntities.Enemies;
 using Application.Inputs;
 using Application.PoolFactories;
@@ -19,7 +20,6 @@ namespace Application.GameCore
         [Inject] private LoadConfigSystem _loadConfigSystem;
         
         private GameStateMachine _gameStateMachine;
-        private bool _isPaused;
         
         private void Awake()
         {
@@ -36,15 +36,11 @@ namespace Application.GameCore
 
         private void Update()
         {
-            if (_isPaused) return;
-            
             _gameStateMachine.UpdateSystem();
         }
 
         private void FixedUpdate()
         {
-            if (_isPaused) return;
-            
             _gameStateMachine.FixedUpdateSystem();
         }
 
@@ -56,16 +52,15 @@ namespace Application.GameCore
 
         private void ChangeUpdateState(PauseStateSignal pauseStateSignal)
         {
-            _isPaused = pauseStateSignal.IsPaused || pauseStateSignal.IsOverGame;
+            if (pauseStateSignal.IsPaused)
+                _gameStateMachine.EnterIn<PauseState>();
+            else 
+                _gameStateMachine.EnterIn<LoopState>();
             
             if (pauseStateSignal.IsPaused && !pauseStateSignal.IsOverGame)
-            {
                 DOTween.PauseAll();
-            }
             else
-            {
                 DOTween.PlayAll();
-            }
         }
     }
 }

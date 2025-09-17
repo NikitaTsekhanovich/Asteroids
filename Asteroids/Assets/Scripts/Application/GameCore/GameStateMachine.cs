@@ -29,6 +29,7 @@ namespace Application.GameCore
                     ufoPoolFactory,
                     signalBus,
                     loadConfigSystem),
+                [typeof(PauseState)] = new PauseState()
             };
             
             EnterIn<LoopState>();

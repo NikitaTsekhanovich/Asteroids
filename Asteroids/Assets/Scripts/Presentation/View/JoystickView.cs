@@ -22,7 +22,10 @@ namespace Presentation.View
         private void Construct(MobileInputViewModel mobileInputViewModel)
         {
             _mobileInputViewModel = mobileInputViewModel;
-            ClickEffect();
+            gameObject.SetActive(_mobileInputViewModel.IsActiveMobileInput);
+            
+            if (_mobileInputViewModel.IsActiveMobileInput)
+                ClickEffect();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -36,6 +39,7 @@ namespace Presentation.View
                 _inputVector = new Vector2(joystickPosition.x, joystickPosition.y);
 
                 _inputVector = _inputVector.magnitude > 1f ? _inputVector.normalized : _inputVector;
+                _mobileInputViewModel.ReadJoystickInput(_inputVector);
 
                 _joystick.rectTransform.anchoredPosition = new Vector2(
                     _inputVector.x * _joystickBackground.rectTransform.sizeDelta.x / 2,
@@ -72,6 +76,7 @@ namespace Presentation.View
             {
                 _joystick.color = _notActiveJoystickColor;
                 _isActiveJoystick = true;
+                _mobileInputViewModel.ReadJoystickInput(Vector2.zero);
             }
             else
             {

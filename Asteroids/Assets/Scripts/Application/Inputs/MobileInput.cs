@@ -15,5 +15,15 @@ namespace Application.Inputs
         {
             
         }
+
+        public void ReadInput(Vector2 inputData)
+        {
+            MoveInput.Value = inputData;
+        }
+
+        public void ClickShoot()
+        {
+            OnShoot?.Invoke();
+        }
     }
 }
