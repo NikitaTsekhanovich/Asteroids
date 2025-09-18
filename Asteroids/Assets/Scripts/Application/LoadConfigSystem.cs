@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Application.Configs;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Application

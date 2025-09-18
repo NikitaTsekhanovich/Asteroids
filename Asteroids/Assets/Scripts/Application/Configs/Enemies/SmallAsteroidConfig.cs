@@ -1,5 +1,5 @@
 using Application.GameEntities;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Application.Configs.Enemies
 {

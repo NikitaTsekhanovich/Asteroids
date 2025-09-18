@@ -1,9 +1,10 @@
+#if UNITY_EDITOR
 using System.IO;
 using Application.Configs;
 using Application.Configs.Enemies;
 using Application.Configs.WeaponsConfigs;
 using Cysharp.Threading.Tasks;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -54,3 +55,4 @@ namespace Editor
         }
     }
 }
+#endif
