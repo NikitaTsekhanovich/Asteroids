@@ -7,9 +7,13 @@ namespace Infrastructure.Installers
     {
         public override void InstallBindings()
         {
+            var firebaseInitializer = new FirebaseInitializer();
+            var firebaseEvents = new FirebaseEvents();
+            
             Container
-                .Bind<FirebaseInitializer>()
+                .Bind<FirebaseContainer>()
                 .AsSingle()
+                .WithArguments(firebaseInitializer, firebaseEvents)
                 .NonLazy();
         }
     }

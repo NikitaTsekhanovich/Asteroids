@@ -1,22 +1,19 @@
 using System;
 using System.Threading.Tasks;
 using Firebase;
-using Firebase.Analytics;
 using Firebase.Extensions;
+using Infrastructure.Properties;
 using UnityEngine;
 
 namespace Infrastructure.FirebaseControllers
 {
-    public class FirebaseInitializer
+    public class FirebaseInitializer : ICanPluginInitialize
     {
-        public FirebaseInitializer()
+        public event Action OnInitialized;
+        
+        public void Initialize()
         {
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(OnDependencyStatusReceived);
-        }
-
-        public void LogTestEvent()
-        {
-            FirebaseAnalytics.LogEvent(FirebaseAnalytics.ParameterLevel, new Parameter("level", 1));
         }
 
         private void OnDependencyStatusReceived(Task<DependencyStatus> statusTask)
@@ -31,7 +28,7 @@ namespace Infrastructure.FirebaseControllers
                     throw new Exception($"Could not resolve all Firebase dependencies: {status}");
                 
                 Debug.Log("Firebase initialized successfully");
-                LogTestEvent();
+                OnInitialized?.Invoke();
             }
             catch (Exception e)
             {

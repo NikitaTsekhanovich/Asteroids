@@ -57,7 +57,7 @@ namespace Application.GameCore
             if (pauseStateSignal.IsPaused)
             {
                 _gameStateMachine.EnterIn<PauseState>();
-                _containerAds.ShowInterstitialAd();
+                _containerAds.InterstitialAds.ShowInterstitialAd();
             }
             else 
                 _gameStateMachine.EnterIn<LoopState>();

@@ -1,15 +1,19 @@
+using System;
+using Infrastructure.Properties;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
 namespace Infrastructure.AdControllers
 {
-    public class InitializerAds : IUnityAdsInitializationListener
+    public class InitializerAds : IUnityAdsInitializationListener, ICanPluginInitialize
     {
         private readonly string _androidAdId;
         private readonly string _iosAdId;
         private readonly bool _isTestMode;
 
         private string _gameId;
+        
+        public event Action OnInitialized;
 
         public InitializerAds(
             string androidAdId,
@@ -40,6 +44,7 @@ namespace Infrastructure.AdControllers
         public void OnInitializationComplete()
         {
             Debug.Log("Ads Initialized");
+            OnInitialized?.Invoke();
         }
 
         public void OnInitializationFailed(UnityAdsInitializationError error, string message)
