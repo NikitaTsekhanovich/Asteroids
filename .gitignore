@@ -156,6 +156,5 @@ _ReSharper*/
 .svn 
 
 #Firebase
-Asteroids/Assets/Firebase/
 Asteroids/Assets/StreamingAssets/google-services-desktop.json
 Asteroids/Assets/google-services.json
