@@ -158,8 +158,7 @@ _ReSharper*/
 #Google configs
 Asteroids/Assets/google-services.json
 Asteroids/Assets/google-services.json.meta
-Asteroids/Assets/StreamingAssets/google-services-desktop.json
-Asteroids/Assets/StreamingAssets/google-services-desktop.json.meta
+Asteroids/Assets/StreamingAssets/
 
 #Firebase
 Asteroids/Assets/Firebase/
