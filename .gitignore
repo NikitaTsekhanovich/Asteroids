@@ -155,10 +155,5 @@ _ReSharper*/
 #Subversion files
 .svn 
 
-#Google configs
-Asteroids/Assets/google-services.json
-Asteroids/Assets/google-services.json.meta
-Asteroids/Assets/StreamingAssets/
-
 #Firebase
 Asteroids/Assets/Firebase/
