@@ -4,7 +4,6 @@ using Application.Configs;
 using Application.GameEntitiesComponents.Spacecraft.States;
 using Application.Inputs;
 using Domain;
-using Domain.Properties;
 using UnityEngine;
 
 namespace Application.GameEntitiesComponents.Spacecraft
@@ -18,7 +17,7 @@ namespace Application.GameEntitiesComponents.Spacecraft
             ParticleSystem invulnerabilityEffect,
             InertialMovement inertialMovement)
         {
-            States = new Dictionary<Type, IState>
+            States = new Dictionary<Type, object>
             {
                 [typeof(MoveState)] = new MoveState(
                     input,

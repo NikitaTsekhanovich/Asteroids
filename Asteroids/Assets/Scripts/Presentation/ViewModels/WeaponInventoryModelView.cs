@@ -3,7 +3,6 @@ using Application.GameEntities;
 using Application.GameEntitiesComponents.ShootSystem;
 using Application.GameEntitiesComponents.ShootSystem.Weapons;
 using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace Presentation.ViewModels

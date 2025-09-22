@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Application.GameEntitiesComponents.Spacecraft.States
 {
-    public class PauseState : IState
+    public class PauseState : IEnterable, IExitable
     {
         private readonly Rigidbody2D _rigidbody;
         private readonly ParticleSystem _invulnerabilityEffect;

@@ -1,7 +1,4 @@
 using System;
-using Application.GameEntities;
-using Application.GameEntities.Enemies;
-using Application.GameEntitiesComponents.ShootSystem.Projectiles;
 using UnityEngine;
 
 namespace Application.GameCore

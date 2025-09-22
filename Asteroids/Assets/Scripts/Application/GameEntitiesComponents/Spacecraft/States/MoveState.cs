@@ -6,7 +6,7 @@ using UniRx;
 
 namespace Application.GameEntitiesComponents.Spacecraft.States
 {
-    public class MoveState : IState, ICanFixedUpdate, IDisposable
+    public class MoveState : ICanFixedUpdate, IDisposable
     {
         private readonly InertialMovement _inertialMovement;
         private readonly IDisposable _disposableInput;
@@ -20,16 +20,6 @@ namespace Application.GameEntitiesComponents.Spacecraft.States
             _inertialMovement = inertialMovement;
         
             _disposableInput = input.MoveInput.Subscribe(moveInput => _moveDirection = moveInput);
-        }
-        
-        public void Enter()
-        {
-            
-        }
-
-        public void Exit()
-        {
-            
         }
 
         public void FixedUpdateSystem()

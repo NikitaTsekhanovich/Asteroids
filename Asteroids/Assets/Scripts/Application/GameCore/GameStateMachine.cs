@@ -5,7 +5,7 @@ using Application.GameEntities.Enemies;
 using Application.Inputs;
 using Application.PoolFactories;
 using Domain;
-using Domain.Properties;
+using Infrastructure.AdControllers;
 using Zenject;
 
 namespace Application.GameCore
@@ -18,9 +18,10 @@ namespace Application.GameCore
             InjectablePoolFactory<Ufo> ufoPoolFactory,
             IInput input,
             SignalBus signalBus,
-            LoadConfigSystem loadConfigSystem)
+            LoadConfigSystem loadConfigSystem,
+            InterstitialAds interstitialAds)
         {
-            States = new Dictionary<Type, IState>
+            States = new Dictionary<Type, object>
             {
                 [typeof(LoopState)] = new LoopState(
                     levelData, 
@@ -29,7 +30,9 @@ namespace Application.GameCore
                     ufoPoolFactory,
                     signalBus,
                     loadConfigSystem),
-                [typeof(PauseState)] = new PauseState()
+                [typeof(PauseState)] = new PauseState(),
+                [typeof(GameOverState)] = new GameOverState(
+                    interstitialAds),
             };
             
             EnterIn<LoopState>();

@@ -1,8 +1,7 @@
 namespace Domain.Properties
 {
-    public interface IState
+    public interface IExitable
     {
-        public void Enter();
         public void Exit();
     }
 }

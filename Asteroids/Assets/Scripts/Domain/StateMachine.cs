@@ -6,24 +6,28 @@ namespace Domain
 {
     public class StateMachine
     {
+        private IEnterable _enterState;
+        private IExitable _exitState;
         private ICanUpdate _updateState;
         private ICanFixedUpdate _fixedUpdateState;
         
-        protected IState CurrentState;
-        protected Dictionary<Type, IState> States;
+        protected object CurrentState;
+        protected Dictionary<Type, object> States;
         
         public void EnterIn<TState>() 
-            where TState : IState
+            where TState : class
         {
-            if (States.TryGetValue(typeof(TState), out IState state))
+            if (States.TryGetValue(typeof(TState), out var state))
             {
-                CurrentState?.Exit();
-                
+                _exitState?.Exit();
+
                 CurrentState = state;
-                _updateState = CurrentState as ICanUpdate;
-                _fixedUpdateState = CurrentState as ICanFixedUpdate;
+                _enterState = state as IEnterable;
+                _exitState = state as IExitable;
+                _updateState = state as ICanUpdate;
+                _fixedUpdateState = state as ICanFixedUpdate;
                 
-                CurrentState.Enter();
+                _enterState?.Enter();
             }
         }
 

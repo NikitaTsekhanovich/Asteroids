@@ -3,7 +3,6 @@ using Application.GameEntities.Enemies;
 using Application.Inputs;
 using Application.PoolFactories;
 using Application.SignalBusEvents;
-using DG.Tweening;
 using Infrastructure.AdControllers;
 using UnityEngine;
 using Zenject;
@@ -31,7 +30,8 @@ namespace Application.GameCore
                 _ufoPoolFactory,
                 _input,
                 _signalBus,
-                _loadConfigSystem);
+                _loadConfigSystem,
+                _containerAds.InterstitialAds);
             
             _signalBus.Subscribe<PauseStateSignal>(ChangeUpdateState);
         }
@@ -54,18 +54,18 @@ namespace Application.GameCore
 
         private void ChangeUpdateState(PauseStateSignal pauseStateSignal)
         {
-            if (pauseStateSignal.IsPaused)
+            if (pauseStateSignal.IsPaused && !pauseStateSignal.IsOverGame)
             {
                 _gameStateMachine.EnterIn<PauseState>();
-                _containerAds.InterstitialAds.ShowInterstitialAd();
             }
-            else 
-                _gameStateMachine.EnterIn<LoopState>();
-            
-            if (pauseStateSignal.IsPaused && !pauseStateSignal.IsOverGame)
-                DOTween.PauseAll();
+            else if (pauseStateSignal.IsPaused)
+            {
+                _gameStateMachine.EnterIn<GameOverState>();
+            }
             else
-                DOTween.PlayAll();
+            {
+                _gameStateMachine.EnterIn<LoopState>();
+            }
         }
     }
 }

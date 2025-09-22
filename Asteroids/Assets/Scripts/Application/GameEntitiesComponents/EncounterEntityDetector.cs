@@ -1,5 +1,4 @@
 using System;
-using Application.GameEntities;
 using Application.GameEntities.Properties;
 using UnityEngine;
 
